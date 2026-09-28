@@ -18,8 +18,10 @@ body {
   overflow: hidden;
 
   background:
-    radial-gradient(circle at center, #191919 0%, #050505 70%);
+    radial-gradient(circle at center, #191919 0%, #050505 75%);
 }
+
+/* HUD */
 
 #hud {
   position: absolute;
@@ -27,7 +29,7 @@ body {
   left: 20px;
   right: 20px;
 
-  z-index: 20;
+  z-index: 50;
 
   display: flex;
   justify-content: space-between;
@@ -36,6 +38,8 @@ body {
   font-size: 20px;
   font-weight: bold;
 }
+
+/* PLAYER */
 
 #player {
   width: 45px;
@@ -47,6 +51,7 @@ body {
 
   background: #111;
   border: 3px solid #00ff88;
+
   border-radius: 50%;
 
   box-shadow:
@@ -54,6 +59,47 @@ body {
     0 0 25px #00ff88;
 
   z-index: 10;
+}
+
+/* WEAPON */
+
+#weapon {
+  position: absolute;
+
+  left: 32px;
+  top: -15px;
+
+  font-size: 35px;
+
+  transform-origin: 5px 30px;
+
+  pointer-events: none;
+
+  opacity: 0;
+}
+
+/* WEAPON ATTACK ANIMATION */
+
+#player.attacking #weapon {
+  opacity: 1;
+
+  animation:
+    swordAttack 0.25s ease-out;
+}
+
+@keyframes swordAttack {
+
+  0% {
+    transform: rotate(-100deg) scale(0.7);
+  }
+
+  50% {
+    transform: rotate(20deg) scale(1.2);
+  }
+
+  100% {
+    transform: rotate(100deg) scale(0.7);
+  }
 }
 
 /* ENEMY */
@@ -79,34 +125,152 @@ body {
   z-index: 5;
 }
 
+/* ENEMY DAMAGE */
+
+.enemy.hit {
+  animation: enemyHit 0.15s linear;
+}
+
+@keyframes enemyHit {
+
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    filter: brightness(3);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* DEATH EFFECT */
+
+.death-effect {
+  position: absolute;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  border: 4px solid #ff3030;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+
+  animation: deathEffect 0.45s ease-out forwards;
+
+  z-index: 20;
+}
+
+@keyframes deathEffect {
+
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+  }
+
+  100% {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+}
+
 /* ATTACK BUTTON */
 
 #attackButton {
   position: absolute;
 
   right: 30px;
-  bottom: 30px;
+  bottom: 35px;
 
-  width: 80px;
-  height: 80px;
+  width: 85px;
+  height: 85px;
 
   border-radius: 50%;
-  border: 3px solid #ffffff;
+
+  border: 3px solid white;
 
   background: #111;
+
   color: white;
 
-  font-size: 32px;
+  font-size: 34px;
 
-  cursor: pointer;
-
-  z-index: 30;
+  z-index: 50;
 
   box-shadow:
-    0 0 10px #ffffff,
-    0 0 25px #ff3030;
+    0 0 12px white,
+    0 0 30px #ff3030;
+
+  touch-action: manipulation;
 }
 
 #attackButton:active {
+  transform: scale(0.85);
+}
+
+/* MOBILE CONTROLS */
+
+#controls {
+  position: absolute;
+
+  left: 25px;
+  bottom: 30px;
+
+  z-index: 50;
+
+  width: 150px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.middle-controls {
+  display: flex;
+  gap: 5px;
+}
+
+#controls button {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 12px;
+
+  border: 2px solid #777;
+
+  background: rgba(20,20,20,0.85);
+
+  color: white;
+
+  font-size: 20px;
+
+  touch-action: manipulation;
+
+  user-select: none;
+}
+
+#controls button:active {
+  background: #00ff88;
+  color: black;
+
   transform: scale(0.9);
+}
+
+/* DESKTOP */
+
+@media (min-width: 800px) {
+
+  #controls {
+    opacity: 0.65;
+  }
+
 }
