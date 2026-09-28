@@ -1,0 +1,2628 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="theme-color" content="#050505">
+
+<title>Shadow Rush</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#030303;
+  font-family:Arial,Helvetica,sans-serif;
+  touch-action:none;
+}
+
+button{
+  font-family:inherit;
+  border:none;
+  cursor:pointer;
+}
+
+/* =========================
+   GAME
+========================= */
+
+#game{
+  position:relative;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #202020 0%,
+      #0c0c0c 45%,
+      #020202 100%
+    );
+}
+
+/* Background grid */
+
+#game::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    );
+
+  background-size:50px 50px;
+
+  pointer-events:none;
+}
+
+/* =========================
+   START SCREEN
+========================= */
+
+.screen{
+  position:absolute;
+  inset:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:rgba(0,0,0,.88);
+
+  z-index:100;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.start-content{
+  text-align:center;
+  width:min(90%,500px);
+}
+
+.game-logo{
+  font-size:80px;
+
+  filter:
+    drop-shadow(0 0 20px #00ff88);
+}
+
+.start-content h1{
+  margin-top:10px;
+
+  color:white;
+
+  font-size:clamp(38px,8vw,70px);
+
+  letter-spacing:5px;
+
+  text-shadow:
+    0 0 10px #00ff88,
+    0 0 30px #00ff88;
+}
+
+.subtitle{
+  margin:15px 0 30px;
+
+  color:#aaa;
+
+  font-size:17px;
+}
+
+#startButton,
+#resumeButton,
+#restartButton,
+#playAgainButton,
+#continueLevelButton{
+
+  padding:15px 30px;
+
+  border-radius:12px;
+
+  background:#00ff88;
+
+  color:#00150c;
+
+  font-size:17px;
+
+  font-weight:bold;
+
+  box-shadow:
+    0 0 15px rgba(0,255,136,.5);
+
+  transition:.15s;
+}
+
+#startButton:hover,
+#resumeButton:hover,
+#restartButton:hover,
+#playAgainButton:hover,
+#continueLevelButton:hover{
+  transform:scale(1.05);
+}
+
+.controls-info{
+  margin-top:30px;
+
+  color:#777;
+
+  line-height:1.8;
+
+  font-size:14px;
+}
+
+/* =========================
+   HUD
+========================= */
+
+#hud{
+  position:absolute;
+
+  top:15px;
+  left:15px;
+  right:15px;
+
+  z-index:50;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  color:white;
+
+  font-size:15px;
+
+  font-weight:bold;
+}
+
+.hud-item{
+
+  padding:8px 11px;
+
+  border-radius:8px;
+
+  background:rgba(0,0,0,.6);
+
+  border:1px solid #333;
+
+  backdrop-filter:blur(5px);
+}
+
+.xp-hud{
+  min-width:100px;
+}
+
+/* XP BAR */
+
+#xpBar{
+
+  position:absolute;
+
+  top:48px;
+  left:15px;
+
+  width:220px;
+  height:8px;
+
+  background:#222;
+
+  border:1px solid #555;
+
+  border-radius:10px;
+
+  overflow:hidden;
+}
+
+#xpBarFill{
+
+  width:0%;
+
+  height:100%;
+
+  background:#00ff88;
+
+  box-shadow:0 0 10px #00ff88;
+
+  transition:.2s;
+}
+
+/* =========================
+   BOSS HUD
+========================= */
+
+#bossHud{
+
+  position:absolute;
+
+  top:78px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:min(80%,400px);
+
+  z-index:50;
+
+  text-align:center;
+
+  display:none;
+}
+
+#bossName{
+
+  color:#ff66ff;
+
+  font-weight:bold;
+
+  font-size:14px;
+
+  margin-bottom:5px;
+
+  text-shadow:
+    0 0 10px #ff00ff;
+}
+
+#bossHealthBar{
+
+  width:100%;
+  height:10px;
+
+  background:#222;
+
+  border:1px solid #aaa;
+
+  border-radius:10px;
+
+  overflow:hidden;
+}
+
+#bossHealthFill{
+
+  width:100%;
+  height:100%;
+
+  background:#ff00ff;
+
+  box-shadow:
+    0 0 12px #ff00ff;
+
+  transition:.2s;
+}
+
+/* =========================
+   PLAYER
+========================= */
+
+#player{
+
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:48px;
+  height:48px;
+
+  transform:translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #444,
+      #111 55%,
+      #000
+    );
+
+  border:3px solid #00ff88;
+
+  box-shadow:
+    0 0 12px #00ff88,
+    0 0 35px rgba(0,255,136,.6);
+
+  z-index:20;
+}
+
+#player::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:10px;
+  height:10px;
+
+  border-radius:50%;
+
+  background:#00ff88;
+
+  left:50%;
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+  box-shadow:0 0 12px #00ff88;
+}
+
+/* =========================
+   WEAPON
+========================= */
+
+#weapon{
+
+  position:absolute;
+
+  left:30px;
+  top:-20px;
+
+  font-size:38px;
+
+  opacity:0;
+
+  transform-origin:5px 30px;
+
+  pointer-events:none;
+}
+
+#player.attacking #weapon{
+
+  opacity:1;
+
+  animation:swordAttack .25s ease-out;
+}
+
+@keyframes swordAttack{
+
+  0%{
+    transform:rotate(-110deg) scale(.7);
+  }
+
+  50%{
+    transform:rotate(15deg) scale(1.25);
+  }
+
+  100%{
+    transform:rotate(110deg) scale(.7);
+  }
+}
+
+/* =========================
+   ENEMY
+========================= */
+
+.enemy{
+
+  position:absolute;
+
+  width:40px;
+  height:40px;
+
+  transform:translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #700,
+      #210000
+    );
+
+  border:3px solid #ff3030;
+
+  box-shadow:
+    0 0 10px #ff0000,
+    0 0 25px rgba(255,0,0,.5);
+
+  z-index:10;
+}
+
+.enemy.hit{
+
+  animation:enemyHit .15s linear;
+}
+
+@keyframes enemyHit{
+
+  50%{
+    transform:
+      translate(-50%,-50%)
+      scale(1.35);
+
+    filter:brightness(3);
+  }
+}
+
+/* =========================
+   BOSS
+========================= */
+
+.boss{
+
+  position:absolute;
+
+  width:80px;
+  height:80px;
+
+  transform:translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #8c008c,
+      #260026
+    );
+
+  border:4px solid #ff00ff;
+
+  box-shadow:
+    0 0 20px #ff00ff,
+    0 0 50px rgba(255,0,255,.6);
+
+  z-index:15;
+}
+
+.boss.hit{
+
+  animation:bossHit .15s linear;
+}
+
+@keyframes bossHit{
+
+  50%{
+    transform:
+      translate(-50%,-50%)
+      scale(1.2);
+
+    filter:brightness(3);
+  }
+}
+
+/* =========================
+   DEATH EFFECT
+========================= */
+
+.death-effect{
+
+  position:absolute;
+
+  width:20px;
+  height:20px;
+
+  border:4px solid #ff3030;
+
+  border-radius:50%;
+
+  transform:translate(-50%,-50%);
+
+  pointer-events:none;
+
+  z-index:40;
+
+  animation:deathEffect .45s ease-out forwards;
+}
+
+@keyframes deathEffect{
+
+  100%{
+    width:110px;
+    height:110px;
+
+    opacity:0;
+  }
+}
+
+/* =========================
+   ATTACK BUTTON
+========================= */
+
+#attackButton{
+
+  position:absolute;
+
+  right:25px;
+  bottom:30px;
+
+  width:85px;
+  height:85px;
+
+  border-radius:50%;
+
+  background:#111;
+
+  border:3px solid white;
+
+  color:white;
+
+  font-size:34px;
+
+  z-index:60;
+
+  box-shadow:
+    0 0 15px white,
+    0 0 35px #ff3030;
+}
+
+#attackButton:active{
+
+  transform:scale(.85);
+}
+
+/* =========================
+   MOBILE CONTROLS
+========================= */
+
+#controls{
+
+  position:absolute;
+
+  left:25px;
+  bottom:30px;
+
+  width:150px;
+
+  z-index:60;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+}
+
+.middle-controls{
+
+  display:flex;
+
+  gap:5px;
+}
+
+.move-button{
+
+  width:48px;
+  height:48px;
+
+  border-radius:12px;
+
+  border:2px solid #666;
+
+  background:rgba(15,15,15,.85);
+
+  color:white;
+
+  font-size:20px;
+
+  touch-action:none;
+}
+
+.move-button:active{
+
+  background:#00ff88;
+
+  color:black;
+
+  transform:scale(.9);
+}
+
+/* =========================
+   PAUSE BUTTON
+========================= */
+
+#pauseButton{
+
+  position:absolute;
+
+  right:20px;
+  top:18px;
+
+  z-index:70;
+
+  width:42px;
+  height:42px;
+
+  border-radius:10px;
+
+  background:rgba(20,20,20,.8);
+
+  border:1px solid #555;
+
+  color:white;
+
+  font-size:18px;
+}
+
+/* =========================
+   MENU BOX
+========================= */
+
+.menu-box{
+
+  width:min(90%,420px);
+
+  padding:35px 25px;
+
+  border-radius:18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #151515,
+      #070707
+    );
+
+  border:1px solid #333;
+
+  text-align:center;
+
+  color:white;
+
+  box-shadow:
+    0 0 50px rgba(0,0,0,.8);
+}
+
+.menu-box h2{
+
+  font-size:30px;
+
+  margin-bottom:20px;
+}
+
+.menu-box p{
+
+  color:#aaa;
+
+  margin-bottom:20px;
+}
+
+.menu-box button{
+
+  display:block;
+
+  width:100%;
+
+  margin-top:12px;
+}
+
+/* =========================
+   FINAL STATS
+========================= */
+
+.final-stats{
+
+  margin:20px 0;
+
+  line-height:2;
+
+  color:#bbb;
+}
+
+.final-stats strong{
+
+  color:white;
+}
+
+/* =========================
+   LEVEL UP
+========================= */
+
+.level-up-box{
+
+  text-align:center;
+
+  color:white;
+
+  padding:40px;
+
+  border-radius:20px;
+
+  background:#101010;
+
+  border:2px solid #00ff88;
+
+  box-shadow:
+    0 0 40px rgba(0,255,136,.4);
+}
+
+.level-icon{
+
+  font-size:65px;
+
+  filter:
+    drop-shadow(0 0 15px #00ff88);
+}
+
+.level-up-box h2{
+
+  margin:15px 0;
+
+  font-size:35px;
+}
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+.notification{
+
+  position:absolute;
+
+  top:35%;
+
+  left:50%;
+
+  transform:translate(-50%,-50%);
+
+  z-index:80;
+
+  padding:18px 28px;
+
+  border-radius:12px;
+
+  background:rgba(0,0,0,.85);
+
+  border:2px solid #00ff88;
+
+  color:white;
+
+  font-size:24px;
+
+  font-weight:bold;
+
+  box-shadow:
+    0 0 30px rgba(0,255,136,.5);
+}
+
+#bossDefeatedMessage{
+
+  border-color:#ff00ff;
+
+  box-shadow:
+    0 0 30px rgba(255,0,255,.5);
+}
+
+/* =========================
+   DAMAGE FLASH
+========================= */
+
+.damage-flash{
+
+  position:absolute;
+
+  inset:0;
+
+  z-index:75;
+
+  background:rgba(255,0,0,.25);
+
+  pointer-events:none;
+
+  animation:damageFlash .2s;
+}
+
+@keyframes damageFlash{
+
+  from{
+    opacity:1;
+  }
+
+  to{
+    opacity:0;
+  }
+}
+
+/* =========================
+   ROTATE MESSAGE
+========================= */
+
+.rotate-icon{
+
+  font-size:60px;
+
+  margin-bottom:15px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:600px){
+
+  #hud{
+
+    font-size:12px;
+
+    gap:5px;
+
+    top:8px;
+    left:8px;
+    right:8px;
+  }
+
+  .hud-item{
+
+    padding:6px 7px;
+  }
+
+  #xpBar{
+
+    top:42px;
+    left:8px;
+
+    width:180px;
+  }
+
+  #bossHud{
+
+    top:62px;
+  }
+
+  #attackButton{
+
+    right:20px;
+    bottom:25px;
+
+    width:75px;
+    height:75px;
+
+    font-size:30px;
+  }
+
+  #controls{
+
+    left:15px;
+    bottom:25px;
+  }
+
+}
+
+/* Hide mobile movement controls on larger screens */
+
+@media(min-width:900px){
+
+  #controls{
+
+    opacity:.35;
+  }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="game">
+
+  <!-- START SCREEN -->
+
+  <section id="startScreen" class="screen">
+
+    <div class="start-content">
+
+      <div class="game-logo">🌑</div>
+
+      <h1>SHADOW RUSH</h1>
+
+      <p class="subtitle">
+        Enter the darkness. Survive the rush.
+      </p>
+
+      <button id="startButton">
+        ▶ START GAME
+      </button>
+
+      <div class="controls-info">
+
+        <p>🖥️ PC: WASD / Arrow Keys</p>
+
+        <p>📱 Mobile: Touch Controls</p>
+
+        <p>⚔️ Attack: SPACE / ⚔️</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- HUD -->
+
+  <header id="hud">
+
+    <div class="hud-item">
+      ❤️ <span id="health">100</span>
+    </div>
+
+    <div class="hud-item">
+      🪙 <span id="coins">0</span>
+    </div>
+
+    <div class="hud-item">
+      🏆 <span id="score">0</span>
+    </div>
+
+    <div class="hud-item">
+      ⭐ LV <span id="level">1</span>
+    </div>
+
+    <div class="hud-item xp-hud">
+      XP
+      <span id="xp">0</span>/
+      <span id="xpNeeded">100</span>
+    </div>
+
+  </header>
+
+
+  <!-- XP BAR -->
+
+  <div id="xpBar">
+
+    <div id="xpBarFill"></div>
+
+  </div>
+
+
+  <!-- BOSS HUD -->
+
+  <section id="bossHud">
+
+    <div id="bossName">
+      👹 SHADOW BOSS
+    </div>
+
+    <div id="bossHealthBar">
+
+      <div id="bossHealthFill"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- PLAYER -->
+
+  <div id="player">
+
+    <div id="weapon">
+      ⚔️
+    </div>
+
+  </div>
+
+
+  <!-- MOBILE CONTROLS -->
+
+  <div id="controls">
+
+    <button
+      id="up"
+      class="move-button"
+    >
+      ▲
+    </button>
+
+    <div class="middle-controls">
+
+      <button
+        id="left"
+        class="move-button"
+      >
+        ◀
+      </button>
+
+      <button
+        id="down"
+        class="move-button"
+      >
+        ▼
+      </button>
+
+      <button
+        id="right"
+        class="move-button"
+      >
+        ▶
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ATTACK -->
+
+  <button id="attackButton">
+    ⚔️
+  </button>
+
+
+  <!-- PAUSE -->
+
+  <button id="pauseButton">
+    ⏸️
+  </button>
+
+
+  <!-- PAUSE SCREEN -->
+
+  <section
+    id="pauseScreen"
+    class="screen hidden"
+  >
+
+    <div class="menu-box">
+
+      <h2>⏸️ GAME PAUSED</h2>
+
+      <button id="resumeButton">
+        ▶ RESUME
+      </button>
+
+      <button id="restartButton">
+        🔄 RESTART
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- GAME OVER -->
+
+  <section
+    id="gameOverScreen"
+    class="screen hidden"
+  >
+
+    <div class="menu-box">
+
+      <div style="font-size:60px;">
+        💀
+      </div>
+
+      <h2>GAME OVER</h2>
+
+      <p>
+        Your Shadow Rush has ended.
+      </p>
+
+      <div class="final-stats">
+
+        <div>
+          🏆 Score:
+          <strong id="finalScore">0</strong>
+        </div>
+
+        <div>
+          🪙 Coins:
+          <strong id="finalCoins">0</strong>
+        </div>
+
+        <div>
+          ⭐ Level:
+          <strong id="finalLevel">1</strong>
+        </div>
+
+      </div>
+
+      <button id="playAgainButton">
+        🔄 PLAY AGAIN
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- LEVEL UP -->
+
+  <section
+    id="levelUpScreen"
+    class="screen hidden"
+  >
+
+    <div class="level-up-box">
+
+      <div class="level-icon">
+        ⭐
+      </div>
+
+      <h2>LEVEL UP!</h2>
+
+      <p>
+        Level
+        <strong id="newLevel">2</strong>
+      </p>
+
+      <button id="continueLevelButton">
+        CONTINUE
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- BOSS MESSAGE -->
+
+  <div
+    id="bossDefeatedMessage"
+    class="notification hidden"
+  >
+    👹 BOSS DEFEATED!
+  </div>
+
+
+  <!-- LEVEL MESSAGE -->
+
+  <div
+    id="levelNotification"
+    class="notification hidden"
+  >
+    ⭐ LEVEL UP!
+  </div>
+
+
+  <!-- DAMAGE EFFECT -->
+
+  <div
+    id="damageFlash"
+    class="damage-flash hidden"
+  ></div>
+
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   SHADOW RUSH GAME ENGINE
+========================================== */
+
+
+/* GAME STATE */
+
+let gameStarted = false;
+let gamePaused = false;
+let gameOverState = false;
+
+let playerX = window.innerWidth / 2;
+let playerY = window.innerHeight / 2;
+
+let health = 100;
+
+let coins = 0;
+
+let score = 0;
+
+let level = 1;
+
+let xp = 0;
+
+let xpNeeded = 100;
+
+let bossActive = false;
+
+let keys = {};
+
+let enemies = [];
+
+let bosses = [];
+
+
+/* PLAYER */
+
+const player =
+  document.getElementById("player");
+
+
+/* START */
+
+const startScreen =
+  document.getElementById("startScreen");
+
+const startButton =
+  document.getElementById("startButton");
+
+
+/* HUD */
+
+const healthText =
+  document.getElementById("health");
+
+const coinsText =
+  document.getElementById("coins");
+
+const scoreText =
+  document.getElementById("score");
+
+const levelText =
+  document.getElementById("level");
+
+const xpText =
+  document.getElementById("xp");
+
+const xpNeededText =
+  document.getElementById("xpNeeded");
+
+const xpBarFill =
+  document.getElementById("xpBarFill");
+
+
+/* ATTACK */
+
+const attackButton =
+  document.getElementById("attackButton");
+
+
+/* PAUSE */
+
+const pauseButton =
+  document.getElementById("pauseButton");
+
+const pauseScreen =
+  document.getElementById("pauseScreen");
+
+const resumeButton =
+  document.getElementById("resumeButton");
+
+const restartButton =
+  document.getElementById("restartButton");
+
+
+/* GAME OVER */
+
+const gameOverScreen =
+  document.getElementById("gameOverScreen");
+
+const playAgainButton =
+  document.getElementById("playAgainButton");
+
+const finalScore =
+  document.getElementById("finalScore");
+
+const finalCoins =
+  document.getElementById("finalCoins");
+
+const finalLevel =
+  document.getElementById("finalLevel");
+
+
+/* LEVEL */
+
+const levelUpScreen =
+  document.getElementById("levelUpScreen");
+
+const newLevel =
+  document.getElementById("newLevel");
+
+const continueLevelButton =
+  document.getElementById(
+    "continueLevelButton"
+  );
+
+
+/* BOSS */
+
+const bossHud =
+  document.getElementById("bossHud");
+
+const bossHealthFill =
+  document.getElementById(
+    "bossHealthFill"
+  );
+
+
+/* ==========================================
+   START GAME
+========================================== */
+
+startButton.addEventListener(
+  "click",
+  startGame
+);
+
+
+function startGame(){
+
+  gameStarted = true;
+
+  gamePaused = false;
+
+  gameOverState = false;
+
+  startScreen.classList.add(
+    "hidden"
+  );
+
+  playerX =
+    window.innerWidth / 2;
+
+  playerY =
+    window.innerHeight / 2;
+
+  player.style.left =
+    playerX + "px";
+
+  player.style.top =
+    playerY + "px";
+
+}
+
+
+/* ==========================================
+   KEYBOARD
+========================================== */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    keys[
+      event.key.toLowerCase()
+    ] = true;
+
+    if(event.code === "Space"){
+
+      event.preventDefault();
+
+      attack();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "keyup",
+  function(event){
+
+    keys[
+      event.key.toLowerCase()
+    ] = false;
+
+  }
+);
+
+
+/* ==========================================
+   MOBILE MOVEMENT
+========================================== */
+
+function setupMoveButton(
+  id,
+  direction
+){
+
+  const button =
+    document.getElementById(id);
+
+
+  button.addEventListener(
+    "touchstart",
+    function(event){
+
+      event.preventDefault();
+
+      keys[direction] = true;
+
+    },
+    {passive:false}
+  );
+
+
+  button.addEventListener(
+    "touchend",
+    function(event){
+
+      event.preventDefault();
+
+      keys[direction] = false;
+
+    },
+    {passive:false}
+  );
+
+
+  button.addEventListener(
+    "touchcancel",
+    function(){
+
+      keys[direction] = false;
+
+    }
+  );
+
+
+  button.addEventListener(
+    "mousedown",
+    function(){
+
+      keys[direction] = true;
+
+    }
+  );
+
+
+  button.addEventListener(
+    "mouseup",
+    function(){
+
+      keys[direction] = false;
+
+    }
+  );
+
+
+  button.addEventListener(
+    "mouseleave",
+    function(){
+
+      keys[direction] = false;
+
+    }
+  );
+
+}
+
+
+setupMoveButton(
+  "up",
+  "arrowup"
+);
+
+setupMoveButton(
+  "down",
+  "arrowdown"
+);
+
+setupMoveButton(
+  "left",
+  "arrowleft"
+);
+
+setupMoveButton(
+  "right",
+  "arrowright"
+);
+
+
+/* ==========================================
+   GAME LOOP
+========================================== */
+
+function gameLoop(){
+
+  if(
+    gameStarted &&
+    !gamePaused &&
+    !gameOverState
+  ){
+
+    updatePlayer();
+
+    moveEnemies();
+
+    moveBosses();
+
+  }
+
+  requestAnimationFrame(
+    gameLoop
+  );
+
+}
+
+gameLoop();
+
+
+/* ==========================================
+   PLAYER MOVEMENT
+========================================== */
+
+function updatePlayer(){
+
+  const speed = 5;
+
+
+  if(
+    keys["w"] ||
+    keys["arrowup"]
+  ){
+
+    playerY -= speed;
+
+  }
+
+
+  if(
+    keys["s"] ||
+    keys["arrowdown"]
+  ){
+
+    playerY += speed;
+
+  }
+
+
+  if(
+    keys["a"] ||
+    keys["arrowleft"]
+  ){
+
+    playerX -= speed;
+
+  }
+
+
+  if(
+    keys["d"] ||
+    keys["arrowright"]
+  ){
+
+    playerX += speed;
+
+  }
+
+
+  const half = 24;
+
+
+  playerX =
+    Math.max(
+      half,
+      Math.min(
+        window.innerWidth - half,
+        playerX
+      )
+    );
+
+
+  playerY =
+    Math.max(
+      half,
+      Math.min(
+        window.innerHeight - half,
+        playerY
+      )
+    );
+
+
+  player.style.left =
+    playerX + "px";
+
+  player.style.top =
+    playerY + "px";
+
+}
+
+
+/* ==========================================
+   CREATE ENEMY
+========================================== */
+
+function createEnemy(){
+
+  const enemy =
+    document.createElement("div");
+
+  enemy.className =
+    "enemy";
+
+
+  const side =
+    Math.floor(
+      Math.random() * 4
+    );
+
+
+  let x;
+
+  let y;
+
+
+  if(side === 0){
+
+    x =
+      Math.random() *
+      window.innerWidth;
+
+    y = -50;
+
+  }
+
+
+  if(side === 1){
+
+    x =
+      window.innerWidth + 50;
+
+    y =
+      Math.random() *
+      window.innerHeight;
+
+  }
+
+
+  if(side === 2){
+
+    x =
+      Math.random() *
+      window.innerWidth;
+
+    y =
+      window.innerHeight + 50;
+
+  }
+
+
+  if(side === 3){
+
+    x = -50;
+
+    y =
+      Math.random() *
+      window.innerHeight;
+
+  }
+
+
+  enemy.style.left =
+    x + "px";
+
+  enemy.style.top =
+    y + "px";
+
+
+  document
+    .getElementById("game")
+    .appendChild(enemy);
+
+
+  enemies.push({
+
+    element:enemy,
+
+    x:x,
+
+    y:y,
+
+    speed:
+      1.2 +
+      level * .08
+
+  });
+
+}
+
+
+/* ==========================================
+   MOVE ENEMIES
+========================================== */
+
+function moveEnemies(){
+
+  for(
+    let i = enemies.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    const enemy =
+      enemies[i];
+
+
+    const dx =
+      playerX - enemy.x;
+
+    const dy =
+      playerY - enemy.y;
+
+
+    const distance =
+      Math.sqrt(
+        dx * dx +
+        dy * dy
+      );
+
+
+    if(distance > 50){
+
+      enemy.x +=
+        dx / distance *
+        enemy.speed;
+
+      enemy.y +=
+        dy / distance *
+        enemy.speed;
+
+
+      enemy.element.style.left =
+        enemy.x + "px";
+
+      enemy.element.style.top =
+        enemy.y + "px";
+
+    }
+    else{
+
+      damagePlayer(.35);
+
+    }
+
+  }
+
+}
+
+
+/* ==========================================
+   CREATE BOSS
+========================================== */
+
+function createBoss(){
+
+  if(bossActive)
+    return;
+
+
+  bossActive = true;
+
+
+  const boss =
+    document.createElement("div");
+
+  boss.className =
+    "boss";
+
+
+  const side =
+    Math.floor(
+      Math.random() * 4
+    );
+
+
+  let x;
+
+  let y;
+
+
+  if(side === 0){
+
+    x =
+      Math.random() *
+      window.innerWidth;
+
+    y = -100;
+
+  }
+
+
+  if(side === 1){
+
+    x =
+      window.innerWidth + 100;
+
+    y =
+      Math.random() *
+      window.innerHeight;
+
+  }
+
+
+  if(side === 2){
+
+    x =
+      Math.random() *
+      window.innerWidth;
+
+    y =
+      window.innerHeight + 100;
+
+  }
+
+
+  if(side === 3){
+
+    x = -100;
+
+    y =
+      Math.random() *
+      window.innerHeight;
+
+  }
+
+
+  boss.style.left =
+    x + "px";
+
+  boss.style.top =
+    y + "px";
+
+
+  document
+    .getElementById("game")
+    .appendChild(boss);
+
+
+  bosses.push({
+
+    element:boss,
+
+    x:x,
+
+    y:y,
+
+    maxHealth:
+      250 +
+      level * 100,
+
+    health:
+      250 +
+      level * 100,
+
+    speed:
+      .65 +
+      level * .03
+
+  });
+
+
+  bossHud.style.display =
+    "block";
+
+}
+
+
+/* ==========================================
+   MOVE BOSSES
+========================================== */
+
+function moveBosses(){
+
+  for(
+    let i = bosses.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    const boss =
+      bosses[i];
+
+
+    const dx =
+      playerX - boss.x;
+
+    const dy =
+      playerY - boss.y;
+
+
+    const distance =
+      Math.sqrt(
+        dx * dx +
+        dy * dy
+      );
+
+
+    if(distance > 90){
+
+      boss.x +=
+        dx / distance *
+        boss.speed;
+
+      boss.y +=
+        dy / distance *
+        boss.speed;
+
+
+      boss.element.style.left =
+        boss.x + "px";
+
+      boss.element.style.top =
+        boss.y + "px";
+
+    }
+    else{
+
+      damagePlayer(.65);
+
+    }
+
+  }
+
+}
+
+
+/* ==========================================
+   ATTACK
+========================================== */
+
+attackButton.addEventListener(
+  "touchstart",
+  function(event){
+
+    event.preventDefault();
+
+    attack();
+
+  },
+  {passive:false}
+);
+
+
+attackButton.addEventListener(
+  "mousedown",
+  function(event){
+
+    event.preventDefault();
+
+    attack();
+
+  }
+);
+
+
+function attack(){
+
+  if(
+    !gameStarted ||
+    gamePaused ||
+    gameOverState
+  )
+    return;
+
+
+  player.classList.remove(
+    "attacking"
+  );
+
+
+  void player.offsetWidth;
+
+
+  player.classList.add(
+    "attacking"
+  );
+
+
+  setTimeout(
+    function(){
+
+      player.classList.remove(
+        "attacking"
+      );
+
+    },
+    250
+  );
+
+
+  const attackRange = 125;
+
+
+  /* NORMAL ENEMIES */
+
+  for(
+    let i = enemies.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    const enemy =
+      enemies[i];
+
+
+    const dx =
+      playerX - enemy.x;
+
+    const dy =
+      playerY - enemy.y;
+
+
+    const distance =
+      Math.sqrt(
+        dx * dx +
+        dy * dy
+      );
+
+
+    if(
+      distance <= attackRange
+    ){
+
+      enemy.element.classList.add(
+        "hit"
+      );
+
+
+      createDeathEffect(
+        enemy.x,
+        enemy.y
+      );
+
+
+      enemy.element.remove();
+
+
+      enemies.splice(i,1);
+
+
+      score += 10;
+
+      coins += 1;
+
+      addXP(25);
+
+
+      updateHUD();
+
+    }
+
+  }
+
+
+  /* BOSS */
+
+  for(
+    let i = bosses.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    const boss =
+      bosses[i];
+
+
+    const dx =
+      playerX - boss.x;
+
+    const dy =
+      playerY - boss.y;
+
+
+    const distance =
+      Math.sqrt(
+        dx * dx +
+        dy * dy
+      );
+
+
+    if(
+      distance <= attackRange + 20
+    ){
+
+      boss.health -= 35;
+
+
+      boss.element.classList.remove(
+        "hit"
+      );
+
+
+      void boss.element.offsetWidth;
+
+
+      boss.element.classList.add(
+        "hit"
+      );
+
+
+      const percent =
+        Math.max(
+          0,
+          boss.health /
+          boss.maxHealth *
+          100
+        );
+
+
+      bossHealthFill.style.width =
+        percent + "%";
+
+
+      if(
+        boss.health <= 0
+      ){
+
+        createDeathEffect(
+          boss.x,
+          boss.y
+        );
+
+
+        boss.element.remove();
+
+
+        bosses.splice(i,1);
+
+
+        bossActive = false;
+
+
+        bossHud.style.display =
+          "none";
+
+
+        score += 100;
+
+        coins += 10;
+
+        addXP(100);
+
+
+        updateHUD();
+
+
+        showNotification(
+          "👹 BOSS DEFEATED!",
+          true
+        );
+
+      }
+
+    }
+
+  }
+
+}
+
+
+/* ==========================================
+   DAMAGE PLAYER
+========================================== */
+
+function damagePlayer(amount){
+
+  health -= amount;
+
+
+  health =
+    Math.max(
+      0,
+      health
+    );
+
+
+  healthText.textContent =
+    Math.floor(health);
+
+
+  const flash =
+    document.getElementById(
+      "damageFlash"
+    );
+
+
+  flash.classList.remove(
+    "hidden"
+  );
+
+
+  setTimeout(
+    function(){
+
+      flash.classList.add(
+        "hidden"
+      );
+
+    },
+    120
+  );
+
+
+  if(health <= 0){
+
+    endGame();
+
+  }
+
+}
+
+
+/* ==========================================
+   XP
+========================================== */
+
+function addXP(amount){
+
+  xp += amount;
+
+
+  while(
+    xp >= xpNeeded
+  ){
+
+    xp -= xpNeeded;
+
+    level++;
+
+    xpNeeded =
+      Math.floor(
+        xpNeeded * 1.35
+      );
+
+
+    health = 100;
+
+
+    updateHUD();
+
+
+    showLevelUp();
+
+
+    if(
+      level % 3 === 0
+    ){
+
+      setTimeout(
+        createBoss,
+        700
+      );
+
+    }
+
+  }
+
+
+  updateHUD();
+
+}
+
+
+/* ==========================================
+   HUD UPDATE
+========================================== */
+
+function updateHUD(){
+
+  healthText.textContent =
+    Math.floor(health);
+
+  coinsText.textContent =
+    coins;
+
+  scoreText.textContent =
+    score;
+
+  levelText.textContent =
+    level;
+
+  xpText.textContent =
+    xp;
+
+  xpNeededText.textContent =
+    xpNeeded;
+
+
+  const percent =
+    Math.min(
+      100,
+      xp / xpNeeded * 100
+    );
+
+
+  xpBarFill.style.width =
+    percent + "%";
+
+}
+
+
+/* ==========================================
+   DEATH EFFECT
+========================================== */
+
+function createDeathEffect(
+  x,
+  y
+){
+
+  const effect =
+    document.createElement("div");
+
+
+  effect.className =
+    "death-effect";
+
+
+  effect.style.left =
+    x + "px";
+
+  effect.style.top =
+    y + "px";
+
+
+  document
+    .getElementById("game")
+    .appendChild(effect);
+
+
+  setTimeout(
+    function(){
+
+      effect.remove();
+
+    },
+    500
+  );
+
+}
+
+
+/* ==========================================
+   LEVEL UP
+========================================== */
+
+function showLevelUp(){
+
+  newLevel.textContent =
+    level;
+
+
+  levelUpScreen.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+continueLevelButton.addEventListener(
+  "click",
+  function(){
+
+    levelUpScreen.classList.add(
+      "hidden"
+    );
+
+  }
+);
+
+
+/* ==========================================
+   NOTIFICATION
+========================================== */
+
+function showNotification(
+  message,
+  bossMessage = false
+){
+
+  const notification =
+    bossMessage
+      ? document.getElementById(
+          "bossDefeatedMessage"
+        )
+      : document.getElementById(
+          "levelNotification"
+        );
+
+
+  notification.textContent =
+    message;
+
+
+  notification.classList.remove(
+    "hidden"
+  );
+
+
+  setTimeout(
+    function(){
+
+      notification.classList.add(
+        "hidden"
+      );
+
+    },
+    1800
+  );
+
+}
+
+
+/* ==========================================
+   PAUSE
+========================================== */
+
+pauseButton.addEventListener(
+  "click",
+  function(){
+
+    if(
+      !gameStarted ||
+      gameOverState
+    )
+      return;
+
+
+    gamePaused =
+      !gamePaused;
+
+
+    if(gamePaused){
+
+      pauseScreen.classList.remove(
+        "hidden"
+      );
+
+      pauseButton.textContent =
+        "▶️";
+
+    }
+    else{
+
+      pauseScreen.classList.add(
+        "hidden"
+      );
+
+      pauseButton.textContent =
+        "⏸️";
+
+    }
+
+  }
+);
+
+
+resumeButton.addEventListener(
+  "click",
+  function(){
+
+    gamePaused = false;
+
+    pauseScreen.classList.add(
+      "hidden"
+    );
+
+    pauseButton.textContent =
+      "⏸️";
+
+  }
+);
+
+
+restartButton.addEventListener(
+  "click",
+  restartGame
+);
+
+
+/* ==========================================
+   GAME OVER
+========================================== */
+
+function endGame(){
+
+  gameOverState = true;
+
+  gamePaused = true;
+
+
+  finalScore.textContent =
+    score;
+
+  finalCoins.textContent =
+    coins;
+
+  finalLevel.textContent =
+    level;
+
+
+  gameOverScreen.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+/* ==========================================
+   RESTART
+========================================== */
+
+playAgainButton.addEventListener(
+  "click",
+  restartGame
+);
+
+
+function restartGame(){
+
+  location.reload();
+
+}
+
+
+/* ==========================================
+   SPAWN ENEMIES
+========================================== */
+
+setInterval(
+  function(){
+
+    if(
+      gameStarted &&
+      !gamePaused &&
+      !gameOverState &&
+      enemies.length < 8
+    ){
+
+      createEnemy();
+
+    }
+
+  },
+  1500
+);
+
+
+/* ==========================================
+   RESIZE
+========================================== */
+
+window.addEventListener(
+  "resize",
+  function(){
+
+    playerX =
+      Math.min(
+        playerX,
+        window.innerWidth - 25
+      );
+
+
+    playerY =
+      Math.min(
+        playerY,
+        window.innerHeight - 25
+      );
+
+  }
+);
+
+
+/* ==========================================
+   INITIAL HUD
+========================================== */
+
+updateHUD();
+
+</script>
+
+</body>
+</html>
+```
