@@ -20,27 +20,82 @@ const keys = {};
 const enemies = [];
 
 
-// =========================
+// ==========================
 // KEYBOARD
-// =========================
+// ==========================
 
 document.addEventListener("keydown", (event) => {
+
   keys[event.key.toLowerCase()] = true;
 
-  // SPACE = ATTACK
   if (event.code === "Space") {
     attack();
   }
+
 });
 
 document.addEventListener("keyup", (event) => {
+
   keys[event.key.toLowerCase()] = false;
+
 });
 
 
-// =========================
+// ==========================
+// MOBILE MOVEMENT
+// ==========================
+
+function holdButton(buttonId, key) {
+
+  const button = document.getElementById(buttonId);
+
+  button.addEventListener("touchstart", (event) => {
+
+    event.preventDefault();
+
+    keys[key] = true;
+
+  });
+
+  button.addEventListener("touchend", (event) => {
+
+    event.preventDefault();
+
+    keys[key] = false;
+
+  });
+
+  button.addEventListener("touchcancel", () => {
+
+    keys[key] = false;
+
+  });
+
+  // Mouse support for testing on PC
+
+  button.addEventListener("mousedown", () => {
+    keys[key] = true;
+  });
+
+  button.addEventListener("mouseup", () => {
+    keys[key] = false;
+  });
+
+  button.addEventListener("mouseleave", () => {
+    keys[key] = false;
+  });
+}
+
+
+holdButton("up", "arrowup");
+holdButton("down", "arrowdown");
+holdButton("left", "arrowleft");
+holdButton("right", "arrowright");
+
+
+// ==========================
 // PLAYER MOVEMENT
-// =========================
+// ==========================
 
 function updatePlayer() {
 
@@ -82,9 +137,9 @@ function updatePlayer() {
 }
 
 
-// =========================
+// ==========================
 // CREATE ENEMY
-// =========================
+// ==========================
 
 function createEnemy() {
 
@@ -128,116 +183,232 @@ function createEnemy() {
     y: y,
     speed: 1.5
   });
+
 }
 
 
-// =========================
+// ==========================
 // ENEMY MOVEMENT
-// =========================
+// ==========================
 
 function moveEnemies() {
 
-  enemies.forEach((enemy, index) => {
+  enemies.forEach((enemy) => {
 
     const dx = playerX - enemy.x;
     const dy = playerY - enemy.y;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const distance = Math.sqrt(
+      dx * dx + dy * dy
+    );
 
     if (distance > 45) {
 
-      enemy.x += (dx / distance) * enemy.speed;
-      enemy.y += (dy / distance) * enemy.speed;
+      enemy.x +=
+        (dx / distance) * enemy.speed;
 
-      enemy.element.style.left = enemy.x + "px";
-      enemy.element.style.top = enemy.y + "px";
+      enemy.y +=
+        (dy / distance) * enemy.speed;
+
+      enemy.element.style.left =
+        enemy.x + "px";
+
+      enemy.element.style.top =
+        enemy.y + "px";
 
     } else {
 
-      // Enemy hits player
-
       health -= 0.5;
 
-      healthText.textContent = Math.max(
-        0,
-        Math.floor(health)
-      );
+      healthText.textContent =
+        Math.max(0, Math.floor(health));
 
       if (health <= 0) {
         gameOver();
       }
+
     }
+
   });
+
 }
 
 
-// =========================
+// ==========================
 // ATTACK
-// =========================
+// ==========================
 
 function attack() {
 
-  attackButton.style.transform = "scale(0.85)";
+  // Weapon animation
+
+  player.classList.remove("attacking");
+
+  void player.offsetWidth;
+
+  player.classList.add("attacking");
 
   setTimeout(() => {
-    attackButton.style.transform = "scale(1)";
-  }, 100);
+
+    player.classList.remove("attacking");
+
+  }, 250);
 
 
-  const attackRange = 100;
+  const attackRange = 110;
 
-  enemies.forEach((enemy, index) => {
+  // Find enemies inside range
+
+  for (let i = enemies.length - 1; i >= 0; i--) {
+
+    const enemy = enemies[i];
 
     const dx = playerX - enemy.x;
     const dy = playerY - enemy.y;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const distance = Math.sqrt(
+      dx * dx + dy * dy
+    );
 
     if (distance <= attackRange) {
 
-      enemy.element.remove();
+      // Hit animation
 
-      enemies.splice(index, 1);
+      enemy.element.classList.add("hit");
+
+      setTimeout(() => {
+
+        createDeathEffect(
+          enemy.x,
+          enemy.y
+        );
+
+        enemy.element.remove();
+
+      }, 120);
+
+      enemies.splice(i, 1);
 
       score += 10;
       coins += 1;
 
       scoreText.textContent = score;
       coinsText.textContent = coins;
+
     }
-  });
+
+  }
+
 }
 
 
-// =========================
+// ==========================
+// DEATH EFFECT
+// ==========================
+
+function createDeathEffect(x, y) {
+
+  const effect =
+    document.createElement("div");
+
+  effect.className = "death-effect";
+
+  effect.style.left = x + "px";
+  effect.style.top = y + "px";
+
+  document
+    .getElementById("game")
+    .appendChild(effect);
+
+  setTimeout(() => {
+
+    effect.remove();
+
+  }, 500);
+
+}
+
+
+// ==========================
+// ATTACK BUTTON
+// ==========================
+
+attackButton.addEventListener(
+  "touchstart",
+  (event) => {
+
+    event.preventDefault();
+
+    attack();
+
+  }
+);
+
+attackButton.addEventListener(
+  "mousedown",
+  (event) => {
+
+    event.preventDefault();
+
+    attack();
+
+  }
+);
+
+
+// ==========================
 // GAME OVER
-// =========================
+// ==========================
 
 function gameOver() {
 
   alert(
-    "💀 SHADOW RUSH\n\nGame Over!\nScore: " + score
+    "💀 SHADOW RUSH\n\n" +
+    "GAME OVER!\n\n" +
+    "Score: " + score
   );
 
   location.reload();
+
 }
 
 
-// =========================
+// ==========================
 // SPAWN ENEMIES
-// =========================
+// ==========================
 
 setInterval(() => {
 
   if (enemies.length < 8) {
+
     createEnemy();
+
   }
 
 }, 1500);
 
 
-// =========================
-// START GAME
-// =========================
+// ==========================
+// WINDOW RESIZE
+// ==========================
+
+window.addEventListener("resize", () => {
+
+  playerX = Math.min(
+    playerX,
+    window.innerWidth - 22
+  );
+
+  playerY = Math.min(
+    playerY,
+    window.innerHeight - 22
+  );
+
+});
+
+
+// ==========================
+// START
+// ==========================
 
 updatePlayer();
