@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #050505;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+#game {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, #171717 0%, #050505 70%);
+}
+
+#hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#player {
+  width: 45px;
+  height: 45px;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  background: #111;
+  border: 3px solid #00ff88;
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 10px #00ff88,
+    0 0 25px #00ff88;
+}
