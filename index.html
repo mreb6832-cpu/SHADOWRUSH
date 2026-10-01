@@ -1,71 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050509">
- <meta name="google-site-verification" content="w1xjlGEr733FoAZAauHPqOYr5VTdH4t9pbAeVH5VR0s" />
-  <meta name="google-adsense-account" content="ca-pub-2329486273161479">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050509">
 
-<title>Shadow Rush</title>
+  <meta name="google-site-verification"
+        content="w1xjlGEr733FoAZAauHPqOYr5VTdH4t9pbAeVH5VR0s">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
+  <meta name="google-adsense-account"
+        content="ca-pub-2329486273161479">
 
-html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#030305;
-  color:#fff;
-}
+  <title>Shadow Rush</title>
 
-button{
-  font:inherit;
-  border:0;
-  cursor:pointer;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.hidden{
-  display:none!important;
-}
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #030305;
+      color: white;
+    }
 
-/* =========================
-   GAME WORLD
-========================= */
+    button {
+      font: inherit;
+      border: 0;
+      cursor: pointer;
+    }
 
-#game{
-  position:relative;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at center,#17172d 0%,#090914 48%,#020204 100%);
-}
+    .hidden {
+      display: none !important;
+    }
 
-#game::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background-image:
-    linear-gradient(#fff 1px,transparent 1px),
-    linear-gradient(90deg,#fff 1px,transparent 1px);
-  background-size:45px 45px;
-  opacity:.08;
-  pointer-events:none;
-}
+    #game {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at center, #17172d 0%, #090914 48%, #020204 100%);
+    }
 
-/* =========================
-   START SCREEN
-========================= */
+    #game::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(#fff 1px, transparent 1px),
+        linear-gradient(90deg, #fff 1px, transparent 1px);
+      background-size: 45px 45px;
+      opacity: .08;
+      pointer-events: none;
+    }
 
-.screen{
-  position:absolute;
-  inset:0;
-  z-ind
+    .screen {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      background: rgba(2, 2, 8, .82);
+    }
+
+    .panel {
+      width: min(500px, 95%);
+      padding: 35px 25px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      background: rgba(15,15,30,.92);
+      box-shadow: 0 20px 70px rgba(0,0,0,.55);
+    }
+
+    .logo {
+      font-size: clamp(42px, 12vw, 76px);
+      font-weight: 900;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 25px #6d5dfc;
+    }
+
+    .subtitle {
+      margin: 12px 0 28px;
+      color: #aaaac0;
+      font-size: 16px;
+    }
+
+    .start-btn {
+      padding: 15px 35px;
+      border-radius: 999px;
+      color: white;
+      background: linear-gradient(135deg, #6d5dfc, #9b4dff);
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 10px 30px rgba(109,93,252,.3);
+    }
+
+    .start-btn:active {
+      transform: scale(.96);
+    }
+
+    #hud {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .hud-box {
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.1);
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    #world {
+      position: absolute;
+      inset: 0;
+    }
+
+    #player {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 12px;
+      background: linear-gradient(135deg,#7b61ff,#c04cff);
+      box-shadow:
+        0 0 20px rgba(123,97,255,.8),
+        0 0 45px rgba(192,76,255,.35);
+      z-index: 5;
+    }
+
+    #player::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      left: 16px;
+      top: 8px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 10px white;
+    }
+
+    .enemy {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ff315c;
+      box-shadow: 0 0 20px rgba(255,49,92,.7);
+      z-index: 4;
+    }
+
+    #controls {
+      position: absolute;
+      bottom: 25px;
+      left: 25px;
+      z-index: 15;
+      display: grid;
+      grid-template-columns: 55px 55px 55px;
+      grid-template-rows: 55px 55px;
+      gap: 7px;
+    }
+
+    .control {
+      width: 55px;
+      height: 55px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,.15);
+      font-size: 22px;
+      backdrop-filter: blur(8px);
+    }
+
+    .control:active {
+      background: rgba(123,97,255,.5);
+    }
+
+    #up {
+      grid-column: 2;
+    }
+
+    #left {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    #down {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    #right {
+      grid-column: 3;
+      grid-row: 2;
+    }
+
+    .game-over-title {
+      font-size: 42px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .score-final {
+      color: #b9b4ff;
+      margin-bottom: 25px;
+      font-size: 20px;
+    }
+
+    @media (min-width: 800px) {
+      #controls {
+        opacity: .7;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main id="game">
+
+    <!-- START SCREEN -->
+    <section id="startScreen" class="screen">
+      <div class="panel">
+        <div class="logo">Shadow Rush</div>
+        <p class="subtitle">
+          Survive the shadows. Move fast. Beat your score.
+        </p>
+        <button id="startBtn" class="start-btn">
+          START GAME
+        </button>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <div id="world">
+
+      <div id="hud">
+        <div class="hud-box">
+          ❤️ <span id="health">100</span>
+        </div>
+
+        <div class="hud-box">
+          ⭐ <span id="score">0</span>
+        </div>
+      </div>
+
+      <div id="player"></div>
+
+    </div>
+
+    <!-- MOBILE CONTROLS -->
+    <div id="controls">
+      <button class="control" id="up">▲</button>
+      <button class="control" id="left">◀</button>
+      <button class="control" id="down">▼</button>
+      <button class="control" id="right">▶</button>
+    </div>
+
+    <!-- GAME OVER -->
+    <section id="gameOver" class="screen hidden">
+      <div class="panel">
+        <div class="game-over-title">GAME OVER</div>
+
+        <div class="score-final">
+          Score: <strong id="finalScore">0</strong>
+        </div>
+
+        <button id="restartBtn" class="start-btn">
+          PLAY AGAIN
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const game = document.getElementById("game");
+    const world = document.getElementById("world");
+    const player = document.getElementById("player");
+
+    const startScreen = document.getElementById("startScreen");
+    const gameOver = document.getElementById("gameOver");
+
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const scoreEl = document.getElementById("score");
+    const healthEl = document.getElementById("health");
+    const finalScoreEl = document.getElementById("finalScore");
+
+    let running = false;
+    let score = 0;
+    let health = 100;
+
+    let playerX = window.innerWidth / 2;
+    let playerY = window.innerHeight / 2;
+
+    const speed = 5;
+    const keys = {};
+
+    let enemies = [];
+    let enemyTimer = null;
+    let scoreTimer = null;
+    let gameLoop = null;
+
+    function updatePlayer() {
+      if (keys["ArrowUp"] || keys["w"]) {
+        playerY -= speed;
+      }
+
+      if (keys["ArrowDown"] || keys["s"]) {
+        playerY += speed;
+      }
+
+      if (keys["ArrowLeft"] || keys["a"]) {
+        playerX -= speed;
+      }
+
+      if (keys["ArrowRight"] || keys["d"]) {
+        playerX += speed;
+      }
+
+      const half = 21;
+
+      playerX = Math.max(half, Math.min(window.innerWidth - half, playerX));
+      playerY = Math.max(half, Math.min(window.innerHeight - half, playerY));
+
+      player.style.left = playerX + "px";
+      player.style.top = playerY + "px";
+    }
+
+    function createEnemy() {
+      if (!running) return;
+
+      const enemy = document.createElement("div");
+      enemy.className = "enemy";
+
+      const side = Math.floor(Math.random() * 4);
+
+      let x;
+      let y;
+
+      if (side === 0) {
+        x = -40;
+        y = Math.random() * window.innerHeight;
+      } else if (side === 1) {
+        x = window.innerWidth + 40;
+        y = Math.random() * window.innerHeight;
+      } else if (side === 2) {
+        x = Math.random() * window.innerWidth;
+        y = -40;
+      } else {
+        x = Math.random() * window.innerWidth;
+        y = window.innerHeight + 40;
+      }
+
+      enemy.style.left = x + "px";
+      enemy.style.top = y + "px";
+
+      world.appendChild(enemy);
+
+      enemies.push({
+        el: enemy,
+        x: x,
+        y: y
+      });
+    }
+
+    function moveEnemies() {
+      enemies.forEach((enemy, index) => {
+
+        const dx = playerX - enemy.x;
+        const dy = playerY - enemy.y;
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 0) {
+          enemy.x += (dx / distance) * 1.6;
+          enemy.y += (dy / distance) * 1.6;
+        }
+
+        enemy.el.style.left = enemy.x + "px";
+        enemy.el.style.top = enemy.y + "px";
+
+        if (distance < 45) {
+          health -= 1;
+
+          healthEl.textContent = Math.max(0, health);
+
+          enemy.el.remove();
+          enemies.splice(index, 1);
+
+          if (health <= 0) {
+            endGame();
+          }
+        }
+      });
+    }
+
+    function update() {
+      if (!running) return;
+
+      updatePlayer();
+      moveEnemies();
+    }
+
+    function startGame() {
+      running = true;
+      score = 0;
+      health = 100;
+
+      scoreEl.textContent = score;
+      healthEl.textContent = health;
+
+      startScreen.classList.add("hidden");
+      gameOver.classList.add("hidden");
+
+      playerX = window.innerWidth / 2;
+      playerY = window.innerHeight / 2;
+
+      enemies.forEach(enemy => enemy.el.remove());
+      enemies = [];
+
+      clearInterval(enemyTimer);
+      clearInterval(scoreTimer);
+      clearInterval(gameLoop);
+
+      enemyTimer = setInterval(createEnemy, 900);
+
+      scoreTimer = setInterval(() => {
+        if (!running) return;
+
+        score++;
+        scoreEl.textContent = score;
+      }, 500);
+
+      gameLoop = setInterval(update, 16);
+    }
+
+    function endGame() {
+      running = false;
+
+      clearInterval(enemyTimer);
+      clearInterval(scoreTimer);
+      clearInterval(gameLoop);
+
+      finalScoreEl.textContent = score;
+      gameOver.classList.remove("hidden");
+    }
+
+    function setKey(key, value) {
+      keys[key] = value;
+
+      if (value) {
+        setTimeout(() => {
+          keys[key] = false;
+        }, 120);
+      }
+    }
+
+    document.addEventListener("keydown", event => {
+      keys[event.key] = true;
+
+      if (
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
+      ) {
+        event.preventDefault();
+      }
+    });
+
+    document.addEventListener("keyup", event => {
+      keys[event.key] = false;
+    });
+
+    function control(buttonId, key) {
+      const button = document.getElementById(buttonId);
+
+      button.addEventListener("touchstart", event => {
+        event.preventDefault();
+        keys[key] = true;
+      });
+
+      button.addEventListener("touchend", event => {
+        event.preventDefault();
+        keys[key] = false;
+      });
+
+      button.addEventListener("mousedown", () => {
+        keys[key] = true;
+      });
+
+      button.addEventListener("mouseup", () => {
+        keys[key] = false;
+      });
+
+      button.addEventListener("mouseleave", () => {
+        keys[key] = false;
+      });
+    }
+
+    control("up", "ArrowUp");
+    control("down", "ArrowDown");
+    control("left", "ArrowLeft");
+    control("right", "ArrowRight");
+
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", startGame);
+
+    window.addEventListener("resize", () => {
+      if (!running) {
+        playerX = window.innerWidth / 2;
+        playerY = window.innerHeight / 2;
+      }
+    });
+  </script>
+
+</body>
+</html>
