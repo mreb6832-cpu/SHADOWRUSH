@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050509">
- <meta name="google-site-verification" content="w1xjlGEr733FoAZAauHPqOYr5VTdH4t9pbAeVH5VR0s" />
+<meta name="google-site-verification" content="w1xjlGEr733FoAZAauHPqOYr5VTdH4t9pbAeVH5VR0s" />
   <meta name="google-adsense-account" content="ca-pub-2329486273161479">
 
-<title>Shadow Rush</title>
+ <title>Shadow Rush</title>
 
 <style>
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
-  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 html,body{
@@ -22,14 +22,15 @@ html,body{
   height:100%;
   overflow:hidden;
   font-family:Arial,Helvetica,sans-serif;
-  background:#030305;
-  color:#fff;
+  background:#050508;
+  color:white;
 }
 
 button{
-  font:inherit;
   border:0;
   cursor:pointer;
+  color:white;
+  font-weight:bold;
 }
 
 .hidden{
@@ -37,7 +38,7 @@ button{
 }
 
 /* =========================
-   GAME WORLD
+   GAME
 ========================= */
 
 #game{
@@ -46,7 +47,7 @@ button{
   height:100%;
   overflow:hidden;
   background:
-    radial-gradient(circle at center,#17172d 0%,#090914 48%,#020204 100%);
+    radial-gradient(circle at center,#151525 0%,#080810 45%,#020204 100%);
 }
 
 #game::before{
@@ -54,66 +55,10 @@ button{
   position:absolute;
   inset:0;
   background-image:
-    linear-gradient(#fff 1px,transparent 1px),
-    linear-gradient(90deg,#fff 1px,transparent 1px);
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
   background-size:45px 45px;
-  opacity:.08;
   pointer-events:none;
-}
-
-/* =========================
-   START SCREEN
-========================= */
-
-.screen{
-  position:absolute;
-  inset:0;
-  z-index:500;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  background:rgba(2,2,7,.96);
-}
-
-.start-content{
-  width:min(650px,95%);
-  text-align:center;
-}
-
-.logo{
-  font-size:clamp(45px,10vw,90px);
-  font-weight:900;
-  letter-spacing:5px;
-  text-shadow:
-    0 0 10px #00ff9d,
-    0 0 30px #00ff9d,
-    0 0 70px #00ff9d55;
-}
-
-.subtitle{
-  color:#aaaac4;
-  margin:15px 0 30px;
-  line-height:1.6;
-}
-
-.main-button{
-  padding:15px 35px;
-  border-radius:12px;
-  color:#fff;
-  font-weight:bold;
-  background:linear-gradient(135deg,#00d9ff,#704cff);
-  box-shadow:0 0 25px #00d9ff44;
-}
-
-.main-button:hover{
-  transform:translateY(-2px);
-}
-
-.controls-info{
-  margin-top:25px;
-  color:#8888a5;
-  line-height:2;
 }
 
 /* =========================
@@ -122,92 +67,120 @@ button{
 
 #hud{
   position:absolute;
-  top:10px;
-  left:10px;
-  right:10px;
-  z-index:100;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:50;
+  padding:10px;
+  pointer-events:none;
+}
+
+.hud-top{
   display:flex;
-  align-items:center;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+}
+
+.stats{
+  display:flex;
   gap:7px;
   flex-wrap:wrap;
 }
 
-.hud-item{
-  min-width:85px;
-  padding:8px 10px;
+.stat{
+  background:rgba(0,0,0,.7);
+  border:1px solid #303044;
   border-radius:10px;
-  background:rgba(9,9,20,.9);
-  border:1px solid #36364f;
-  box-shadow:0 4px 15px #0007;
+  padding:7px 11px;
   font-size:13px;
+  box-shadow:0 0 12px rgba(0,0,0,.4);
 }
 
-#xpBox{
-  width:175px;
+.health-box{
+  width:min(300px,45vw);
 }
 
-#xpBar{
+.bar{
   width:100%;
-  height:7px;
-  margin-top:5px;
-  background:#242438;
-  border-radius:10px;
+  height:13px;
+  background:#17171f;
+  border:1px solid #343444;
+  border-radius:20px;
   overflow:hidden;
+  margin-top:4px;
+}
+
+#healthFill{
+  width:100%;
+  height:100%;
+  background:#20e070;
+  transition:width .15s;
 }
 
 #xpFill{
-  height:100%;
   width:0%;
-  background:linear-gradient(90deg,#00eaff,#7d4dff);
-  transition:.2s;
+  height:100%;
+  background:#9d55ff;
+  transition:width .2s;
 }
 
-.hud-button{
-  padding:9px 12px;
-  border-radius:10px;
-  color:#fff;
-  background:#17172b;
-  border:1px solid #41415d;
+.xp-box{
+  width:min(300px,45vw);
 }
 
-.hud-button:hover{
-  background:#292940;
+.hud-buttons{
+  display:flex;
+  gap:6px;
+  pointer-events:auto;
+}
+
+.small-btn{
+  background:#171722;
+  border:1px solid #414154;
+  border-radius:9px;
+  padding:8px 10px;
+}
+
+.small-btn:hover{
+  background:#252536;
 }
 
 /* =========================
-   BOSS
+   BOSS HUD
 ========================= */
 
 #bossHud{
   position:absolute;
-  top:80px;
+  top:78px;
   left:50%;
   transform:translateX(-50%);
-  width:min(520px,82%);
-  z-index:90;
+  width:min(520px,90vw);
+  z-index:40;
   text-align:center;
 }
 
-#bossName{
-  color:#ff4d7d;
+.boss-title{
+  font-size:16px;
   font-weight:bold;
-  margin-bottom:5px;
-  text-shadow:0 0 10px #ff1744;
-}
-
-#bossBar{
-  width:100%;
-  height:13px;
-  background:#310c18;
-  border:1px solid #ff315f;
-  border-radius:20px;
-  overflow:hidden;
+  text-shadow:0 0 10px #ff2222;
+  margin-bottom:4px;
 }
 
 #bossFill{
   width:100%;
+  height:18px;
+  background:#250909;
+  border:2px solid #ff3434;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+#bossFillInner{
+  width:100%;
   height:100%;
-  background:linear-gradient(90deg,#ff1744,#ff6b9b);
+  background:#ef2525;
+  transition:width .15s;
 }
 
 /* =========================
@@ -216,97 +189,93 @@ button{
 
 #player{
   position:absolute;
-  width:55px;
-  height:55px;
-  border-radius:50%;
-  z-index:30;
+  width:48px;
+  height:48px;
+  z-index:20;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:
-    radial-gradient(circle at 35% 30%,#7dffc0,#00ca78 50%,#075536);
-  box-shadow:
-    0 0 15px #00ff9d,
-    0 0 40px #00ff9d55;
+  font-size:34px;
+  filter:drop-shadow(0 0 9px #8b45ff);
+  transform:translate(-50%,-50%);
 }
 
-#playerFace{
-  font-size:27px;
-}
-
-#weapon{
+.player-aura{
   position:absolute;
-  right:-25px;
-  top:8px;
-  font-size:30px;
-  transform-origin:8px 20px;
-  filter:drop-shadow(0 0 6px #fff);
+  width:70px;
+  height:70px;
+  border:2px solid rgba(150,80,255,.25);
+  border-radius:50%;
+  animation:aura 1.4s infinite;
 }
 
-#player.attacking #weapon{
-  animation:weaponAttack .27s ease;
+@keyframes aura{
+  0%,100%{transform:scale(.8);opacity:.3}
+  50%{transform:scale(1.2);opacity:.8}
 }
 
-@keyframes weaponAttack{
-  0%{
-    transform:rotate(-45deg) scale(1);
-  }
-  50%{
-    transform:rotate(105deg) scale(1.4);
-  }
-  100%{
-    transform:rotate(-45deg) scale(1);
-  }
+#playerEmoji{
+  position:relative;
+  z-index:2;
+}
+
+.attacking{
+  animation:attack .28s ease;
+}
+
+@keyframes attack{
+  0%{transform:translate(-50%,-50%) rotate(0) scale(1)}
+  40%{transform:translate(-50%,-50%) rotate(-20deg) scale(1.35)}
+  70%{transform:translate(-50%,-50%) rotate(25deg) scale(1.3)}
+  100%{transform:translate(-50%,-50%) rotate(0) scale(1)}
 }
 
 /* =========================
-   ENEMY
+   ENEMIES
 ========================= */
 
 .enemy{
   position:absolute;
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  z-index:20;
+  width:42px;
+  height:42px;
+  z-index:12;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:22px;
-  background:
-    radial-gradient(circle at 35% 30%,#ff7070,#c61e37 50%,#500611);
-  border:2px solid #ff3e59;
-  box-shadow:0 0 15px #ff174455;
+  font-size:29px;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 6px rgba(255,0,0,.4));
 }
 
-.enemy.hit{
-  animation:enemyHit .16s linear;
+.enemy.fast{
+  filter:drop-shadow(0 0 9px #ffcc33);
 }
 
-.enemy-hp{
+.enemy.tank{
+  font-size:38px;
+  filter:drop-shadow(0 0 9px #ff3333);
+}
+
+.enemy.normal{
+  filter:drop-shadow(0 0 7px #ff4444);
+}
+
+.enemy-health{
   position:absolute;
+  width:42px;
+  height:5px;
   top:-8px;
-  left:0;
-  width:100%;
-  height:4px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#210909;
+  border-radius:5px;
   overflow:hidden;
-  border-radius:10px;
-  background:#300b13;
 }
 
-.enemy-hp-fill{
-  width:100%;
+.enemy-health-fill{
   height:100%;
-  background:#ff315d;
-}
-
-@keyframes enemyHit{
-  0%{transform:scale(1)}
-  50%{
-    transform:scale(1.3);
-    filter:brightness(2);
-  }
-  100%{transform:scale(1)}
+  width:100%;
+  background:#ef3434;
 }
 
 /* =========================
@@ -317,162 +286,114 @@ button{
   position:absolute;
   width:85px;
   height:85px;
-  border-radius:25px;
-  z-index:21;
+  z-index:14;
   display:flex;
-  justify-content:center;
   align-items:center;
-  font-size:45px;
-  background:
-    radial-gradient(circle at 35% 30%,#ff7c9d,#a80039 50%,#350014);
-  border:3px solid #ff2f70;
-  box-shadow:
-    0 0 20px #ff1766,
-    0 0 60px #ff176644;
+  justify-content:center;
+  font-size:65px;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 18px #ff1111);
+  animation:bossPulse 1s infinite;
 }
 
-.boss.hit{
-  animation:bossHit .16s linear;
+@keyframes bossPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(1.08)}
 }
 
-@keyframes bossHit{
-  0%{transform:scale(1)}
-  50%{
-    transform:scale(1.17);
-    filter:brightness(2);
-  }
-  100%{transform:scale(1)}
+.boss.low{
+  filter:drop-shadow(0 0 25px #ff00ff);
 }
 
 /* =========================
-   ATTACK
+   EFFECTS
 ========================= */
 
-#attackButton{
+.effect{
   position:absolute;
-  right:25px;
-  bottom:30px;
-  z-index:120;
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  color:white;
+  z-index:35;
+  pointer-events:none;
+}
+
+.hit-effect{
+  font-size:28px;
+  animation:hit .45s forwards;
+}
+
+@keyframes hit{
+  0%{transform:scale(.4);opacity:1}
+  100%{transform:scale(1.5) translateY(-25px);opacity:0}
+}
+
+.damage-text{
+  font-size:19px;
   font-weight:bold;
-  font-size:17px;
-  background:radial-gradient(circle,#ff416c,#9e002c);
-  border:3px solid #ff819a;
-  box-shadow:0 0 30px #ff174466;
+  color:#ff4b4b;
+  animation:damage .65s forwards;
 }
 
-#attackButton:active{
-  transform:scale(.9);
+@keyframes damage{
+  0%{opacity:1;transform:translate(-50%,0)}
+  100%{opacity:0;transform:translate(-50%,-40px)}
 }
 
-/* =========================
-   MOBILE CONTROLS
-========================= */
-
-#mobileControls{
-  position:absolute;
-  left:18px;
-  bottom:22px;
-  z-index:120;
-  width:165px;
-  height:150px;
+.death{
+  font-size:34px;
+  animation:death .55s forwards;
 }
 
-.move-button{
-  position:absolute;
-  width:52px;
-  height:52px;
-  border-radius:14px;
-  color:white;
-  font-size:22px;
-  background:#17172b;
-  border:1px solid #51516f;
+@keyframes death{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}
+  70%{opacity:1;transform:translate(-50%,-50%) scale(1.6)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}
 }
 
-#upButton{
-  left:56px;
-  top:0;
+.slash{
+  font-size:55px;
+  animation:slash .3s forwards;
 }
 
-#leftButton{
-  left:0;
-  top:55px;
+@keyframes slash{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(-60deg) scale(.4)}
+  30%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(60deg) scale(1.5)}
 }
 
-#downButton{
-  left:56px;
-  top:55px;
+.special-effect{
+  font-size:75px;
+  animation:special .6s forwards;
 }
 
-#rightButton{
-  left:112px;
-  top:55px;
+@keyframes special{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  35%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}
 }
 
 /* =========================
-   DAMAGE
+   SCREENS
 ========================= */
 
-#damageFlash{
+.screen{
   position:absolute;
   inset:0;
-  z-index:450;
-  pointer-events:none;
-  background:#ff003c;
-  opacity:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(5px);
 }
-
-#damageFlash.show{
-  animation:damageFlash .25s ease;
-}
-
-@keyframes damageFlash{
-  0%{opacity:.45}
-  100%{opacity:0}
-}
-
-/* =========================
-   DEATH EFFECT
-========================= */
-
-.death-effect{
-  position:absolute;
-  width:15px;
-  height:15px;
-  z-index:80;
-  border-radius:50%;
-  border:3px solid #ff416c;
-  pointer-events:none;
-  animation:deathEffect .5s ease forwards;
-}
-
-@keyframes deathEffect{
-  from{
-    transform:scale(.5);
-    opacity:1;
-  }
-  to{
-    transform:scale(5);
-    opacity:0;
-  }
-}
-
-/* =========================
-   PANELS
-========================= */
 
 .panel{
-  width:min(850px,96%);
+  width:min(620px,92vw);
   max-height:90vh;
   overflow:auto;
-  padding:25px;
-  border-radius:20px;
-  background:#0b0b17;
-  border:1px solid #393951;
-  box-shadow:0 0 50px #000;
+  background:#0d0d15;
+  border:1px solid #37374c;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 0 40px rgba(0,0,0,.8);
 }
 
 .panel h2{
@@ -480,125 +401,147 @@ button{
   margin-bottom:18px;
 }
 
+.start-panel{
+  text-align:center;
+  width:min(600px,92vw);
+}
+
+.logo{
+  font-size:clamp(42px,9vw,75px);
+  font-weight:900;
+  letter-spacing:4px;
+  text-shadow:
+    0 0 10px #8c42ff,
+    0 0 30px #6421bd;
+}
+
+.subtitle{
+  color:#aaaabd;
+  margin:12px 0 25px;
+}
+
+.main-button{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  background:#7134db;
+  margin-top:10px;
+  font-size:16px;
+  box-shadow:0 0 18px rgba(113,52,219,.25);
+}
+
+.main-button:hover{
+  background:#854bfa;
+}
+
+.secondary-button{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  background:#1b1b29;
+  border:1px solid #38384b;
+  margin-top:8px;
+}
+
 .close-button{
   width:100%;
   padding:12px;
-  margin-top:18px;
+  margin-top:15px;
+  background:#242432;
   border-radius:10px;
-  color:#fff;
-  background:#25253b;
 }
 
-.close-button:hover{
-  background:#343454;
+.danger-button{
+  background:#8d2424;
+  padding:8px 13px;
+  border-radius:8px;
+}
+
+.level-big{
+  font-size:70px;
+  text-align:center;
+  color:#a55cff;
+  text-shadow:0 0 25px #7b32e9;
+  margin:15px;
+}
+
+.final-stats{
+  text-align:center;
+  line-height:2;
+  margin:20px;
 }
 
 /* =========================
    SHOP
 ========================= */
 
-.shop-coins{
-  text-align:center;
-  color:#ffd54a;
-  margin-bottom:18px;
-}
-
 .shop-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:15px;
+  gap:10px;
 }
 
 .weapon-card{
-  position:relative;
-  padding:18px;
-  border-radius:15px;
-  background:#121222;
-  border:1px solid #36364e;
+  background:#151521;
+  border:1px solid #333346;
+  border-radius:13px;
+  padding:13px;
 }
 
 .weapon-card.equipped{
-  border-color:#00eaff;
-  box-shadow:0 0 25px #00eaff22;
+  border-color:#9b5cff;
+  box-shadow:0 0 12px rgba(155,92,255,.2);
 }
 
 .weapon-icon{
-  font-size:48px;
+  font-size:40px;
+  text-align:center;
+  margin-bottom:5px;
 }
 
 .weapon-name{
-  margin:7px 0;
-  font-size:20px;
+  text-align:center;
   font-weight:bold;
 }
 
 .weapon-info{
-  color:#aaaac2;
-  font-size:13px;
-  line-height:1.7;
+  font-size:12px;
+  color:#aaa;
+  text-align:center;
+  margin:6px 0;
+  line-height:1.6;
 }
 
-.weapon-actions{
-  display:flex;
-  gap:7px;
-  margin-top:12px;
-}
-
-.weapon-actions button{
-  flex:1;
+.weapon-card button{
+  width:100%;
+  background:#6030b7;
   padding:9px;
   border-radius:8px;
-  color:white;
-  background:#28283e;
+  margin-top:5px;
 }
 
-.weapon-actions button:disabled{
-  opacity:.45;
+.weapon-card button:disabled{
+  background:#292934;
+  color:#777;
   cursor:not-allowed;
 }
 
-.buy-button{
-  background:#008e67!important;
-}
-
-.upgrade-button{
-  background:#7041c8!important;
-}
-
-.equip-button{
-  background:#006c83!important;
-}
-
 /* =========================
-   LEVEL UP
+   ACHIEVEMENTS
 ========================= */
 
-.level-box{
-  width:min(450px,95%);
-  padding:35px;
-  text-align:center;
-  border-radius:20px;
-  background:#0c0c19;
-  border:1px solid #764dff;
-  box-shadow:0 0 45px #764dff55;
+.achievement{
+  background:#151521;
+  border:1px solid #292938;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:8px;
+  color:#777;
 }
 
-.level-big{
-  margin:10px 0;
-  font-size:65px;
-  font-weight:900;
-  color:#aa8cff;
-}
-
-/* =========================
-   GAME OVER
-========================= */
-
-.final-stats{
-  margin:20px 0;
-  color:#bbb;
-  line-height:2;
-  text-align:center;
+.achievement.unlocked{
+  color:white;
+  border-color:#8d54dc;
 }
 
 /* =========================
@@ -607,22 +550,94 @@ button{
 
 #notification{
   position:absolute;
-  top:145px;
   left:50%;
+  top:28%;
   transform:translateX(-50%);
-  z-index:300;
-  padding:10px 18px;
-  border-radius:10px;
-  background:#15152a;
-  border:1px solid #444466;
+  z-index:200;
+  background:rgba(12,12,20,.94);
+  border:1px solid #7944c8;
+  padding:12px 20px;
+  border-radius:12px;
   opacity:0;
   pointer-events:none;
   transition:.25s;
-  white-space:nowrap;
+  text-align:center;
 }
 
 #notification.show{
   opacity:1;
+}
+
+/* =========================
+   ATTACK BUTTON
+========================= */
+
+#attackButton{
+  position:absolute;
+  right:25px;
+  bottom:25px;
+  z-index:60;
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  background:#7b32df;
+  border:3px solid #b58cff;
+  font-size:16px;
+  box-shadow:0 0 25px rgba(123,50,223,.5);
+}
+
+#attackButton:active{
+  transform:scale(.9);
+}
+
+#specialButton{
+  position:absolute;
+  right:130px;
+  bottom:30px;
+  z-index:60;
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:#b022c7;
+  border:2px solid #f08aff;
+  font-size:12px;
+  box-shadow:0 0 20px rgba(190,30,220,.4);
+}
+
+#specialButton:disabled{
+  opacity:.35;
+}
+
+/* =========================
+   MOBILE CONTROLS
+========================= */
+
+#mobileControls{
+  position:absolute;
+  left:20px;
+  bottom:22px;
+  z-index:60;
+  width:145px;
+  height:145px;
+}
+
+.move{
+  position:absolute;
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  background:rgba(35,35,52,.85);
+  border:1px solid #55556d;
+  font-size:20px;
+}
+
+#up{left:49px;top:0}
+#down{left:49px;bottom:0}
+#left{left:0;top:49px}
+#right{right:0;top:49px}
+
+#mobileControls.hidden-controls{
+  display:none;
 }
 
 /* =========================
@@ -633,40 +648,9 @@ button{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 5px;
-  border-bottom:1px solid #28283d;
-}
-
-.settings-row button{
-  padding:8px 14px;
-  border-radius:8px;
-  background:#292940;
-  color:#fff;
-}
-
-.danger-button{
-  background:#a6002f!important;
-}
-
-/* =========================
-   ACHIEVEMENTS
-========================= */
-
-.achievement{
-  padding:14px;
-  margin:8px 0;
-  border-radius:10px;
-  background:#151526;
-  border:1px solid #303047;
-}
-
-.achievement.unlocked{
-  border-color:#00d98a;
-  box-shadow:0 0 15px #00d98a22;
-}
-
-.achievement small{
-  color:#9999b0;
+  gap:15px;
+  padding:13px 0;
+  border-bottom:1px solid #292936;
 }
 
 /* =========================
@@ -675,36 +659,42 @@ button{
 
 @media(max-width:650px){
 
-  #hud{
-    gap:4px;
-  }
-
-  .hud-item{
-    min-width:auto;
-    padding:6px 8px;
+  .stat{
+    padding:5px 7px;
     font-size:11px;
   }
 
-  #xpBox{
-    width:130px;
+  .hud-buttons .small-btn{
+    font-size:11px;
+    padding:6px;
   }
 
   #bossHud{
     top:105px;
   }
 
+  #attackButton{
+    width:82px;
+    height:82px;
+    right:15px;
+    bottom:18px;
+  }
+
+  #specialButton{
+    right:108px;
+    bottom:25px;
+    width:65px;
+    height:65px;
+  }
+
   .shop-grid{
     grid-template-columns:1fr;
   }
 
-  #attackButton{
-    width:85px;
-    height:85px;
-    right:18px;
-    bottom:20px;
-    font-size:14px;
+  #mobileControls{
+    transform:scale(.85);
+    transform-origin:bottom left;
   }
-
 }
 </style>
 </head>
@@ -713,382 +703,381 @@ button{
 
 <div id="game">
 
-<!-- =========================
-     START SCREEN
-========================= -->
+  <!-- ================= HUD ================= -->
 
-<div id="startScreen" class="screen">
+  <div id="hud">
 
-  <div class="start-content">
+    <div class="hud-top">
 
-    <div class="logo">
-      SHADOW RUSH
+      <div>
+
+        <div class="stats">
+
+          <div class="stat">
+            ⭐ Level:
+            <b id="levelText">1</b>
+          </div>
+
+          <div class="stat">
+            🏆 Score:
+            <b id="scoreText">0</b>
+          </div>
+
+          <div class="stat">
+            🪙 Coins:
+            <b id="coinsText">0</b>
+          </div>
+
+          <div class="stat">
+            ☠️ Kills:
+            <b id="killsText">0</b>
+          </div>
+
+        </div>
+
+        <div class="health-box">
+
+          ❤️ HP
+          <div class="bar">
+            <div id="healthFill"></div>
+          </div>
+
+        </div>
+
+        <div class="xp-box">
+
+          ⭐ XP
+          <div class="bar">
+            <div id="xpFill"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="hud-buttons">
+
+        <button class="small-btn" id="pauseButton">
+          ⏸
+        </button>
+
+        <button class="small-btn" id="shopButton">
+          🛒
+        </button>
+
+        <button class="small-btn" id="achievementButton">
+          🏅
+        </button>
+
+      </div>
+
     </div>
 
-    <div class="subtitle">
-      Fight enemies. Defeat bosses. Upgrade your weapons.
-      Become the strongest shadow warrior.
+  </div>
+
+
+  <!-- ================= BOSS HUD ================= -->
+
+  <div id="bossHud" class="hidden">
+
+    <div class="boss-title">
+      👹 BOSS
     </div>
 
-    <button id="startButton" class="main-button">
-      ▶ START GAME
-    </button>
-
-    <div class="controls-info">
-      🖥️ WASD / Arrow Keys = Move<br>
-      ⚔️ SPACE = Attack<br>
-      📱 Mobile = Movement Buttons<br>
-      🛒 Shop = Weapons & Upgrades
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     HUD
-========================= -->
-
-<div id="hud">
-
-  <div class="hud-item">
-    ❤️ HP:
-    <b id="health">100</b>
-  </div>
-
-  <div class="hud-item">
-    🪙 Coins:
-    <b id="coins">0</b>
-  </div>
-
-  <div class="hud-item">
-    🏆 Score:
-    <b id="score">0</b>
-  </div>
-
-  <div class="hud-item">
-    ⭐ Level:
-    <b id="level">1</b>
-  </div>
-
-  <div id="xpBox" class="hud-item">
-
-    XP:
-    <b>
-      <span id="xp">0</span> /
-      <span id="xpNeeded">100</span>
-    </b>
-
-    <div id="xpBar">
-      <div id="xpFill"></div>
+    <div id="bossFill">
+      <div id="bossFillInner"></div>
     </div>
 
   </div>
 
-  <button id="shopButton" class="hud-button">
-    🛒 SHOP
-  </button>
 
-  <button id="pauseButton" class="hud-button">
-    ⏸️
-  </button>
+  <!-- ================= PLAYER ================= -->
 
-</div>
+  <div id="player">
 
+    <div class="player-aura"></div>
 
-<!-- =========================
-     BOSS HUD
-========================= -->
-
-<div id="bossHud" class="hidden">
-
-  <div id="bossName">
-    👹 SHADOW BOSS
-  </div>
-
-  <div id="bossBar">
-    <div id="bossFill"></div>
-  </div>
-
-</div>
-
-
-<!-- =========================
-     PLAYER
-========================= -->
-
-<div id="player">
-
-  <div id="playerFace">
-    😎
-  </div>
-
-  <div id="weapon">
-    🗡️
-  </div>
-
-</div>
-
-
-<!-- =========================
-     MOBILE CONTROLS
-========================= -->
-
-<div id="mobileControls">
-
-  <button id="upButton" class="move-button">
-    ▲
-  </button>
-
-  <button id="leftButton" class="move-button">
-    ◀
-  </button>
-
-  <button id="downButton" class="move-button">
-    ▼
-  </button>
-
-  <button id="rightButton" class="move-button">
-    ▶
-  </button>
-
-</div>
-
-
-<!-- =========================
-     ATTACK
-========================= -->
-
-<button id="attackButton">
-  ⚔️<br>
-  ATTACK
-</button>
-
-
-<!-- =========================
-     DAMAGE
-========================= -->
-
-<div id="damageFlash"></div>
-
-
-<!-- =========================
-     NOTIFICATION
-========================= -->
-
-<div id="notification"></div>
-
-
-<!-- =========================
-     PAUSE SCREEN
-========================= -->
-
-<div id="pauseScreen" class="screen hidden">
-
-  <div class="panel" style="text-align:center">
-
-    <h2>
-      ⏸️ GAME PAUSED
-    </h2>
-
-    <button id="resumeButton" class="main-button">
-      ▶ RESUME
-    </button>
-
-    <br><br>
-
-    <button id="pauseShopButton" class="close-button">
-      🛒 WEAPON SHOP
-    </button>
-
-    <button id="pauseSettingsButton" class="close-button">
-      ⚙️ SETTINGS
-    </button>
-
-    <button id="pauseRestartButton" class="close-button">
-      🔄 RESTART
-    </button>
+    <span id="playerEmoji">
+      🥷
+    </span>
 
   </div>
 
-</div>
+
+  <!-- ================= ATTACK ================= -->
+
+  <button id="specialButton">
+    💥<br>SPECIAL
+  </button>
+
+  <button id="attackButton">
+    ⚔️<br>ATTACK
+  </button>
 
 
-<!-- =========================
-     SHOP
-========================= -->
+  <!-- ================= MOBILE ================= -->
 
-<div id="shopScreen" class="screen hidden">
+  <div id="mobileControls">
 
-  <div class="panel">
-
-    <h2>
-      🛒 SHADOW ARMORY
-    </h2>
-
-    <div class="shop-coins">
-      🪙 Your Coins:
-      <b id="shopCoins">0</b>
-    </div>
-
-    <div id="shopGrid" class="shop-grid"></div>
-
-    <button id="closeShop" class="close-button">
-      ✕ CLOSE SHOP
-    </button>
+    <button class="move" id="up">▲</button>
+    <button class="move" id="down">▼</button>
+    <button class="move" id="left">◀</button>
+    <button class="move" id="right">▶</button>
 
   </div>
 
-</div>
+
+  <!-- ================= NOTIFICATION ================= -->
+
+  <div id="notification"></div>
 
 
-<!-- =========================
-     SETTINGS
-========================= -->
+  <!-- ================= START ================= -->
 
-<div id="settingsScreen" class="screen hidden">
+  <div id="startScreen" class="screen">
 
-  <div class="panel">
+    <div class="panel start-panel">
 
-    <h2>
-      ⚙️ SETTINGS
-    </h2>
+      <div class="logo">
+        SHADOW RUSH
+      </div>
 
-    <div class="settings-row">
-      <span>🔊 Sound</span>
-      <button id="soundButton">
-        ON
+      <div class="subtitle">
+        ⚔️ Enter the Shadow World
+      </div>
+
+      <p style="color:#aaa;line-height:1.7">
+        Defeat enemies.<br>
+        Collect coins.<br>
+        Upgrade your weapons.<br>
+        Destroy powerful bosses.
+      </p>
+
+      <button id="startButton" class="main-button">
+        ▶ START GAME
       </button>
-    </div>
 
-    <div class="settings-row">
-      <span>📱 Mobile Controls</span>
-      <button id="mobileButton">
-        ON
+      <button id="startShopButton" class="secondary-button">
+        🛒 WEAPON SHOP
       </button>
-    </div>
 
-    <div class="settings-row">
-      <span>💾 Save</span>
-      <button id="saveButton">
-        SAVE
+      <button id="startSettingsButton" class="secondary-button">
+        ⚙️ SETTINGS
       </button>
+
     </div>
 
-    <div class="settings-row">
-      <span>🗑️ Reset Progress</span>
-      <button id="resetButton" class="danger-button">
-        RESET
+  </div>
+
+
+  <!-- ================= SHOP ================= -->
+
+  <div id="shopScreen" class="screen hidden">
+
+    <div class="panel">
+
+      <h2>
+        🛒 WEAPON SHOP
+      </h2>
+
+      <div style="text-align:center;margin-bottom:15px">
+        🪙 Coins:
+        <b id="shopCoins">0</b>
+      </div>
+
+      <div id="shopGrid" class="shop-grid"></div>
+
+      <button id="closeShop" class="close-button">
+        ✕ CLOSE
       </button>
-    </div>
-
-    <button id="closeSettings" class="close-button">
-      ✕ CLOSE
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     ACHIEVEMENTS
-========================= -->
-
-<div id="achievementScreen" class="screen hidden">
-
-  <div class="panel">
-
-    <h2>
-      🏅 ACHIEVEMENTS
-    </h2>
-
-    <div id="achievementList"></div>
-
-    <button id="closeAchievements" class="close-button">
-      ✕ CLOSE
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     LEVEL UP
-========================= -->
-
-<div id="levelUpScreen" class="screen hidden">
-
-  <div class="level-box">
-
-    <div>
-      🎉 LEVEL UP!
-    </div>
-
-    <div class="level-big">
-      <span id="newLevel">2</span>
-    </div>
-
-    <p>
-      Your power has increased!
-    </p>
-
-    <br>
-
-    <button id="continueLevel" class="main-button">
-      CONTINUE
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     GAME OVER
-========================= -->
-
-<div id="gameOverScreen" class="screen hidden">
-
-  <div class="level-box">
-
-    <h2>
-      💀 GAME OVER
-    </h2>
-
-    <div class="final-stats">
-
-      🏆 Score:
-      <b id="finalScore">0</b>
-      <br>
-
-      ⭐ Level:
-      <b id="finalLevel">1</b>
-      <br>
-
-      🪙 Coins:
-      <b id="finalCoins">0</b>
 
     </div>
 
-    <button id="restartButton" class="main-button">
-      🔄 PLAY AGAIN
-    </button>
+  </div>
+
+
+  <!-- ================= SETTINGS ================= -->
+
+  <div id="settingsScreen" class="screen hidden">
+
+    <div class="panel">
+
+      <h2>
+        ⚙️ SETTINGS
+      </h2>
+
+      <div class="settings-row">
+
+        <span>🔊 Sound</span>
+
+        <button id="soundButton" class="secondary-button" style="width:auto;margin:0">
+          ON
+        </button>
+
+      </div>
+
+      <div class="settings-row">
+
+        <span>📱 Mobile Controls</span>
+
+        <button id="mobileButton" class="secondary-button" style="width:auto;margin:0">
+          ON
+        </button>
+
+      </div>
+
+      <div class="settings-row">
+
+        <span>💾 Save Game</span>
+
+        <button id="saveButton" class="secondary-button" style="width:auto;margin:0">
+          SAVE
+        </button>
+
+      </div>
+
+      <div class="settings-row">
+
+        <span>🗑️ Reset Progress</span>
+
+        <button id="resetButton" class="danger-button">
+          RESET
+        </button>
+
+      </div>
+
+      <button id="closeSettings" class="close-button">
+        ✕ CLOSE
+      </button>
+
+    </div>
 
   </div>
 
-</div>
+
+  <!-- ================= ACHIEVEMENTS ================= -->
+
+  <div id="achievementScreen" class="screen hidden">
+
+    <div class="panel">
+
+      <h2>
+        🏅 ACHIEVEMENTS
+      </h2>
+
+      <div id="achievementList"></div>
+
+      <button id="closeAchievements" class="close-button">
+        ✕ CLOSE
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= LEVEL UP ================= -->
+
+  <div id="levelUpScreen" class="screen hidden">
+
+    <div class="panel start-panel">
+
+      <h2>
+        🎉 LEVEL UP!
+      </h2>
+
+      <div class="level-big">
+        <span id="newLevel">2</span>
+      </div>
+
+      <p>
+        Your power has increased!
+      </p>
+
+      <button id="continueLevel" class="main-button">
+        CONTINUE
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= PAUSE ================= -->
+
+  <div id="pauseScreen" class="screen hidden">
+
+    <div class="panel start-panel">
+
+      <h2>
+        ⏸ GAME PAUSED
+      </h2>
+
+      <button id="resumeButton" class="main-button">
+        ▶ RESUME
+      </button>
+
+      <button id="pauseShopButton" class="secondary-button">
+        🛒 SHOP
+      </button>
+
+      <button id="pauseSettingsButton" class="secondary-button">
+        ⚙️ SETTINGS
+      </button>
+
+      <button id="restartButtonPause" class="secondary-button">
+        🔄 RESTART
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= GAME OVER ================= -->
+
+  <div id="gameOverScreen" class="screen hidden">
+
+    <div class="panel start-panel">
+
+      <h2>
+        💀 GAME OVER
+      </h2>
+
+      <div class="final-stats">
+
+        🏆 Score:
+        <b id="finalScore">0</b>
+        <br>
+
+        ⭐ Level:
+        <b id="finalLevel">1</b>
+        <br>
+
+        🪙 Coins:
+        <b id="finalCoins">0</b>
+        <br>
+
+        ☠️ Kills:
+        <b id="finalKills">0</b>
+
+      </div>
+
+      <button id="restartButton" class="main-button">
+        🔄 PLAY AGAIN
+      </button>
+
+    </div>
+
+  </div>
 
 </div>
 
 
 <script>
-
 /* ==========================================================
    SHADOW RUSH
-   FINAL SINGLE-FILE GAME
+   FINAL SINGLE-FILE VERSION
 ========================================================== */
 
 
@@ -1171,6 +1160,18 @@ const achievements = {
     name:"Treasure Hunter",
     description:"Collect 100 coins.",
     unlocked:false
+  },
+
+  specialMaster:{
+    name:"Shadow Power",
+    description:"Use your Special Attack.",
+    unlocked:false
+  },
+
+  levelTen:{
+    name:"Shadow Legend",
+    description:"Reach Level 10.",
+    unlocked:false
   }
 
 };
@@ -1188,6 +1189,8 @@ let playerX=window.innerWidth/2;
 let playerY=window.innerHeight/2;
 
 let health=100;
+let maxHealth=100;
+
 let coins=0;
 let score=0;
 
@@ -1201,8 +1204,12 @@ let bosses=[];
 let keys={};
 
 let lastEnemySpawn=0;
-let lastTime=0;
+let lastBossSpawnLevel=0;
+
 let lastAttack=0;
+let lastSpecial=0;
+
+let specialCooldown=6000;
 
 let totalKills=0;
 let totalBossKills=0;
@@ -1228,1040 +1235,109 @@ let mobileEnabled=true;
 
 
 /* ==========================================================
-   DOM
+   ELEMENTS
 ========================================================== */
 
+const game=document.getElementById("game");
+
 const player=document.getElementById("player");
-const weaponElement=document.getElementById("weapon");
 
-const healthElement=document.getElementById("health");
-const coinsElement=document.getElementById("coins");
-const scoreElement=document.getElementById("score");
-const levelElement=document.getElementById("level");
+const attackButton=document.getElementById("attackButton");
+const specialButton=document.getElementById("specialButton");
 
-const xpElement=document.getElementById("xp");
-const xpNeededElement=document.getElementById("xpNeeded");
-const xpFill=document.getElementById("xpFill");
+const startScreen=document.getElementById("startScreen");
+const shopScreen=document.getElementById("shopScreen");
+const settingsScreen=document.getElementById("settingsScreen");
+const achievementScreen=document.getElementById("achievementScreen");
+const levelUpScreen=document.getElementById("levelUpScreen");
+const pauseScreen=document.getElementById("pauseScreen");
+const gameOverScreen=document.getElementById("gameOverScreen");
 
 const bossHud=document.getElementById("bossHud");
-const bossFill=document.getElementById("bossFill");
+const bossFillInner=document.getElementById("bossFillInner");
 
-const damageFlash=document.getElementById("damageFlash");
+const mobileControls=document.getElementById("mobileControls");
 
 const notification=document.getElementById("notification");
 
-const shopScreen=document.getElementById("shopScreen");
-const shopGrid=document.getElementById("shopGrid");
-const shopCoins=document.getElementById("shopCoins");
-
-const pauseScreen=document.getElementById("pauseScreen");
-
-const settingsScreen=
-document.getElementById("settingsScreen");
-
-const achievementScreen=
-document.getElementById("achievementScreen");
-
-const levelUpScreen=
-document.getElementById("levelUpScreen");
-
-const gameOverScreen=
-document.getElementById("gameOverScreen");
-
-const mobileControls=
-document.getElementById("mobileControls");
-
 
 /* ==========================================================
-   SAVE
+   AUDIO
 ========================================================== */
 
-function saveGame(){
+let audioContext=null;
 
-  const save={
+function playSound(type){
 
-    coins,
-    score,
-    level,
-    xp,
-    xpNeeded,
-    health,
-
-    totalKills,
-    totalBossKills,
-
-    equippedWeapon,
-
-    weaponOwned,
-    weaponLevels,
-
-    achievements,
-
-    soundEnabled,
-    mobileEnabled
-
-  };
-
-  localStorage.setItem(
-    "shadowRushSave",
-    JSON.stringify(save)
-  );
-
-}
-
-
-/* ==========================================================
-   LOAD
-========================================================== */
-
-function loadGame(){
-
-  const saved=
-  localStorage.getItem("shadowRushSave");
-
-  if(!saved) return;
+  if(!soundEnabled)
+    return;
 
   try{
 
-    const data=
-    JSON.parse(saved);
+    if(!audioContext){
 
-    coins=data.coins ?? 0;
-    score=data.score ?? 0;
-
-    level=data.level ?? 1;
-    xp=data.xp ?? 0;
-    xpNeeded=data.xpNeeded ?? 100;
-
-    health=data.health ?? 100;
-
-    totalKills=data.totalKills ?? 0;
-    totalBossKills=data.totalBossKills ?? 0;
-
-    equippedWeapon=
-    data.equippedWeapon ?? "shadow";
-
-    weaponOwned=
-    data.weaponOwned ?? weaponOwned;
-
-    weaponLevels=
-    data.weaponLevels ?? weaponLevels;
-
-    if(data.achievements){
-
-      Object.keys(data.achievements)
-      .forEach(id=>{
-
-        if(achievements[id]){
-
-          achievements[id].unlocked=
-          data.achievements[id].unlocked;
-
-        }
-
-      });
+      audioContext=
+        new (window.AudioContext ||
+        window.webkitAudioContext)();
 
     }
 
-    soundEnabled=
-    data.soundEnabled ?? true;
+    const oscillator=
+      audioContext.createOscillator();
 
-    mobileEnabled=
-    data.mobileEnabled ?? true;
+    const gain=
+      audioContext.createGain();
 
-  }catch(error){
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
 
-    console.log("Save loading failed:",error);
+    let frequency=300;
+    let duration=.08;
 
-  }
-
-}
-
-
-/* ==========================================================
-   HUD
-========================================================== */
-
-function updateHUD(){
-
-  health=Math.max(
-    0,
-    Math.min(100,health)
-  );
-
-  healthElement.textContent=
-  Math.floor(health);
-
-  coinsElement.textContent=coins;
-  scoreElement.textContent=score;
-
-  levelElement.textContent=level;
-
-  xpElement.textContent=xp;
-  xpNeededElement.textContent=xpNeeded;
-
-  xpFill.style.width=
-  Math.min(
-    100,
-    (xp/xpNeeded)*100
-  )+"%";
-
-  shopCoins.textContent=coins;
-
-  weaponElement.textContent=
-  weapons[equippedWeapon].icon;
-
-}
-
-
-/* ==========================================================
-   START
-========================================================== */
-
-document
-.getElementById("startButton")
-.addEventListener("click",()=>{
-
-  startGame();
-
-});
-
-
-function startGame(){
-
-  gameStarted=true;
-  gamePaused=false;
-  gameOverState=false;
-
-  document
-  .getElementById("startScreen")
-  .classList.add("hidden");
-
-  updateHUD();
-
-  requestAnimationFrame(gameLoop);
-
-}
-
-
-/* ==========================================================
-   KEYBOARD
-========================================================== */
-
-document.addEventListener("keydown",event=>{
-
-  keys[event.key.toLowerCase()]=true;
-
-  if(
-    event.code==="Space" &&
-    gameStarted &&
-    !gamePaused &&
-    !gameOverState
-  ){
-
-    event.preventDefault();
-
-    attack();
-
-  }
-
-});
-
-
-document.addEventListener("keyup",event=>{
-
-  keys[event.key.toLowerCase()]=false;
-
-});
-
-
-/* ==========================================================
-   PLAYER
-========================================================== */
-
-function updatePlayer(){
-
-  if(gamePaused || gameOverState)
-  return;
-
-  const speed=4;
-
-  if(
-    keys["w"] ||
-    keys["arrowup"]
-  ){
-    playerY-=speed;
-  }
-
-  if(
-    keys["s"] ||
-    keys["arrowdown"]
-  ){
-    playerY+=speed;
-  }
-
-  if(
-    keys["a"] ||
-    keys["arrowleft"]
-  ){
-    playerX-=speed;
-  }
-
-  if(
-    keys["d"] ||
-    keys["arrowright"]
-  ){
-    playerX+=speed;
-  }
-
-  playerX=Math.max(
-    0,
-    Math.min(
-      window.innerWidth-55,
-      playerX
-    )
-  );
-
-  playerY=Math.max(
-    0,
-    Math.min(
-      window.innerHeight-55,
-      playerY
-    )
-  );
-
-  player.style.left=
-  playerX+"px";
-
-  player.style.top=
-  playerY+"px";
-
-}
-
-
-/* ==========================================================
-   MOBILE CONTROLS
-========================================================== */
-
-function holdButton(button,key){
-
-  button.addEventListener(
-    "pointerdown",
-    event=>{
-
-      event.preventDefault();
-
-      keys[key]=true;
-
+    if(type==="attack"){
+      frequency=180;
+      duration=.06;
     }
-  );
 
-  button.addEventListener(
-    "pointerup",
-    ()=>{
-
-      keys[key]=false;
-
+    if(type==="hit"){
+      frequency=90;
+      duration=.08;
     }
-  );
 
-  button.addEventListener(
-    "pointercancel",
-    ()=>{
-
-      keys[key]=false;
-
+    if(type==="special"){
+      frequency=600;
+      duration=.25;
     }
-  );
 
-  button.addEventListener(
-    "pointerleave",
-    ()=>{
-
-      keys[key]=false;
-
+    if(type==="level"){
+      frequency=700;
+      duration=.35;
     }
-  );
 
-}
+    if(type==="boss"){
+      frequency=80;
+      duration=.4;
+    }
 
+    oscillator.frequency.value=frequency;
 
-holdButton(
-  document.getElementById("upButton"),
-  "arrowup"
-);
-
-holdButton(
-  document.getElementById("downButton"),
-  "arrowdown"
-);
-
-holdButton(
-  document.getElementById("leftButton"),
-  "arrowleft"
-);
-
-holdButton(
-  document.getElementById("rightButton"),
-  "arrowright"
-);
-
-
-/* ==========================================================
-   ATTACK BUTTON
-========================================================== */
-
-document
-.getElementById("attackButton")
-.addEventListener(
-  "pointerdown",
-  event=>{
-
-    event.preventDefault();
-
-    attack();
-
-  }
-);
-
-
-/* ==========================================================
-   WEAPON DAMAGE
-========================================================== */
-
-function getWeaponDamage(){
-
-  const weapon=
-  weapons[equippedWeapon];
-
-  const weaponLevel=
-  weaponLevels[equippedWeapon];
-
-  return weapon.baseDamage+
-  ((weaponLevel-1)*15);
-
-}
-
-
-/* ==========================================================
-   CREATE ENEMY
-========================================================== */
-
-function createEnemy(){
-
-  const enemy=
-  document.createElement("div");
-
-  enemy.className="enemy";
-
-  enemy.innerHTML=`
-
-    👾
-
-    <div class="enemy-hp">
-      <div class="enemy-hp-fill"></div>
-    </div>
-
-  `;
-
-  let x;
-  let y;
-
-  const side=
-  Math.floor(Math.random()*4);
-
-  if(side===0){
-
-    x=Math.random()*window.innerWidth;
-    y=-60;
-
-  }
-
-  if(side===1){
-
-    x=window.innerWidth+60;
-    y=Math.random()*window.innerHeight;
-
-  }
-
-  if(side===2){
-
-    x=Math.random()*window.innerWidth;
-    y=window.innerHeight+60;
-
-  }
-
-  if(side===3){
-
-    x=-60;
-    y=Math.random()*window.innerHeight;
-
-  }
-
-  const hp=
-  40+(level*8);
-
-  const enemyObject={
-
-    element:enemy,
-
-    x,
-    y,
-
-    hp,
-    maxHp:hp,
-
-    speed:1.15+(level*.07)
-
-  };
-
-  enemies.push(enemyObject);
-
-  game.appendChild(enemy);
-
-}
-
-
-/* ==========================================================
-   MOVE ENEMIES
-========================================================== */
-
-function moveEnemies(){
-
-  for(
-    let index=enemies.length-1;
-    index>=0;
-    index--
-  ){
-
-    const enemy=enemies[index];
-
-    const dx=
-    playerX-enemy.x;
-
-    const dy=
-    playerY-enemy.y;
-
-    const distance=
-    Math.sqrt(
-      dx*dx+dy*dy
+    gain.gain.setValueAtTime(
+      .08,
+      audioContext.currentTime
     );
 
-    if(distance>1){
-
-      enemy.x+=
-      (dx/distance)*
-      enemy.speed;
-
-      enemy.y+=
-      (dy/distance)*
-      enemy.speed;
-
-    }
-
-    enemy.element.style.left=
-    enemy.x+"px";
-
-    enemy.element.style.top=
-    enemy.y+"px";
-
-    if(distance<48){
-
-      damagePlayer(7);
-
-      removeEnemy(index);
-
-    }
-
-  }
-
-}
-
-
-/* ==========================================================
-   REMOVE ENEMY
-========================================================== */
-
-function removeEnemy(index){
-
-  const enemy=enemies[index];
-
-  if(!enemy) return;
-
-  createDeathEffect(
-    enemy.x+20,
-    enemy.y+20
-  );
-
-  enemy.element.remove();
-
-  enemies.splice(index,1);
-
-}
-
-
-/* ==========================================================
-   CREATE BOSS
-========================================================== */
-
-function createBoss(){
-
-  if(bosses.length>0)
-  return;
-
-  const boss=
-  document.createElement("div");
-
-  boss.className="boss";
-
-  boss.textContent="👹";
-
-  const hp=
-  250+(level*100);
-
-  const bossObject={
-
-    element:boss,
-
-    x:window.innerWidth/2,
-
-    y:130,
-
-    hp,
-    maxHp:hp,
-
-    speed:.65+(level*.03)
-
-  };
-
-  bosses.push(bossObject);
-
-  game.appendChild(boss);
-
-  bossHud.classList.remove("hidden");
-
-  showNotification(
-    "👹 BOSS HAS ARRIVED!"
-  );
-
-  updateBossHUD();
-
-}
-
-
-/* ==========================================================
-   MOVE BOSS
-========================================================== */
-
-function moveBosses(){
-
-  for(
-    let index=0;
-    index<bosses.length;
-    index++
-  ){
-
-    const boss=bosses[index];
-
-    const dx=
-    playerX-boss.x;
-
-    const dy=
-    playerY-boss.y;
-
-    const distance=
-    Math.sqrt(
-      dx*dx+dy*dy
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioContext.currentTime+duration
     );
 
-    if(distance>1){
+    oscillator.start();
 
-      boss.x+=
-      (dx/distance)*
-      boss.speed;
-
-      boss.y+=
-      (dy/distance)*
-      boss.speed;
-
-    }
-
-    boss.element.style.left=
-    boss.x+"px";
-
-    boss.element.style.top=
-    boss.y+"px";
-
-    if(distance<75){
-
-      damagePlayer(15);
-
-    }
-
-  }
-
-}
-
-
-/* ==========================================================
-   BOSS HUD
-========================================================== */
-
-function updateBossHUD(){
-
-  if(bosses.length===0){
-
-    bossHud.classList.add("hidden");
-
-    return;
-
-  }
-
-  const boss=bosses[0];
-
-  bossFill.style.width=
-  Math.max(
-    0,
-    (boss.hp/boss.maxHp)*100
-  )+"%";
-
-}
-
-
-/* ==========================================================
-   ATTACK
-========================================================== */
-
-function attack(){
-
-  if(
-    !gameStarted ||
-    gamePaused ||
-    gameOverState
-  )
-  return;
-
-  const now=Date.now();
-
-  if(now-lastAttack<350)
-  return;
-
-  lastAttack=now;
-
-  player.classList.remove("attacking");
-
-  void player.offsetWidth;
-
-  player.classList.add("attacking");
-
-  setTimeout(()=>{
-
-    player.classList.remove("attacking");
-
-  },300);
-
-  const damage=
-  getWeaponDamage();
-
-
-  /* BOSS */
-
-  for(
-    let index=bosses.length-1;
-    index>=0;
-    index--
-  ){
-
-    const boss=bosses[index];
-
-    const dx=
-    (playerX+27)-
-    (boss.x+42);
-
-    const dy=
-    (playerY+27)-
-    (boss.y+42);
-
-    const distance=
-    Math.sqrt(
-      dx*dx+dy*dy
+    oscillator.stop(
+      audioContext.currentTime+duration
     );
 
-    if(distance<135){
-
-      boss.hp-=damage;
-
-      boss.element.classList.remove("hit");
-
-      void boss.element.offsetWidth;
-
-      boss.element.classList.add("hit");
-
-      updateBossHUD();
-
-      if(boss.hp<=0){
-
-        killBoss(index);
-
-      }
-
-    }
-
-  }
-
-
-  /* ENEMIES */
-
-  for(
-    let index=enemies.length-1;
-    index>=0;
-    index--
-  ){
-
-    const enemy=enemies[index];
-
-    const dx=
-    (playerX+27)-
-    (enemy.x+22);
-
-    const dy=
-    (playerY+27)-
-    (enemy.y+22);
-
-    const distance=
-    Math.sqrt(
-      dx*dx+dy*dy
-    );
-
-    if(distance<125){
-
-      enemy.hp-=damage;
-
-      const hpFill=
-      enemy.element
-      .querySelector(
-        ".enemy-hp-fill"
-      );
-
-      hpFill.style.width=
-      Math.max(
-        0,
-        (enemy.hp/enemy.maxHp)*100
-      )+"%";
-
-      enemy.element.classList.remove("hit");
-
-      void enemy.element.offsetWidth;
-
-      enemy.element.classList.add("hit");
-
-      if(enemy.hp<=0){
-
-        killEnemy(index);
-
-      }
-
-    }
-
-  }
-
-}
-
-
-/* ==========================================================
-   KILL ENEMY
-========================================================== */
-
-function killEnemy(index){
-
-  const enemy=enemies[index];
-
-  if(!enemy) return;
-
-  createDeathEffect(
-    enemy.x+20,
-    enemy.y+20
-  );
-
-  enemy.element.remove();
-
-  enemies.splice(index,1);
-
-  score+=10;
-  coins+=1;
-
-  totalKills++;
-
-  addXP(25);
-
-  checkAchievements();
-
-  updateHUD();
-
-  saveGame();
-
-}
-
-
-/* ==========================================================
-   KILL BOSS
-========================================================== */
-
-function killBoss(index){
-
-  const boss=bosses[index];
-
-  if(!boss) return;
-
-  createDeathEffect(
-    boss.x+40,
-    boss.y+40
-  );
-
-  boss.element.remove();
-
-  bosses.splice(index,1);
-
-  score+=100;
-  coins+=10;
-
-  totalBossKills++;
-
-  addXP(100);
-
-  bossHud.classList.add("hidden");
-
-  showNotification(
-    "👑 BOSS DEFEATED! +10 COINS"
-  );
-
-  checkAchievements();
-
-  updateHUD();
-
-  saveGame();
-
-}
-
-
-/* ==========================================================
-   PLAYER DAMAGE
-========================================================== */
-
-function damagePlayer(amount){
-
-  if(gameOverState)
-  return;
-
-  health-=amount;
-
-  damageFlash.classList.remove("show");
-
-  void damageFlash.offsetWidth;
-
-  damageFlash.classList.add("show");
-
-  updateHUD();
-
-  if(health<=0){
-
-    gameOver();
-
-  }
-
-}
-
-
-/* ==========================================================
-   XP
-========================================================== */
-
-function addXP(amount){
-
-  xp+=amount;
-
-  while(xp>=xpNeeded){
-
-    xp-=xpNeeded;
-
-    level++;
-
-    xpNeeded=
-    Math.floor(
-      xpNeeded*1.25
-    );
-
-    health=100;
-
-    showLevelUp();
-
-  }
-
-  checkAchievements();
-
-  updateHUD();
-
-  saveGame();
-
-}
-
-
-/* ==========================================================
-   LEVEL UP
-========================================================== */
-
-function showLevelUp(){
-
-  gamePaused=true;
-
-  document
-  .getElementById("newLevel")
-  .textContent=level;
-
-  levelUpScreen
-  .classList.remove("hidden");
-
-  showNotification(
-    "⭐ LEVEL UP!"
-  );
-
-}
-
-
-document
-.getElementById("continueLevel")
-.addEventListener("click",()=>{
-
-  levelUpScreen
-  .classList.add("hidden");
-
-  gamePaused=false;
-
-});
-
-
-/* ==========================================================
-   DEATH EFFECT
-========================================================== */
-
-function createDeathEffect(x,y){
-
-  const effect=
-  document.createElement("div");
-
-  effect.className=
-  "death-effect";
-
-  effect.style.left=x+"px";
-  effect.style.top=y+"px";
-
-  game.appendChild(effect);
-
-  setTimeout(()=>{
-
-    effect.remove();
-
-  },500);
+  }catch(e){}
 
 }
 
@@ -2274,15 +1350,13 @@ let notificationTimer;
 
 function showNotification(message){
 
-  notification.textContent=
-  message;
+  notification.textContent=message;
 
   notification.classList.add("show");
 
   clearTimeout(notificationTimer);
 
-  notificationTimer=
-  setTimeout(()=>{
+  notificationTimer=setTimeout(()=>{
 
     notification.classList.remove("show");
 
@@ -2292,842 +1366,272 @@ function showNotification(message){
 
 
 /* ==========================================================
-   SHOP
+   HUD
 ========================================================== */
 
-function openShop(){
+function updateHUD(){
 
-  gamePaused=true;
+  document.getElementById("levelText")
+    .textContent=level;
 
-  renderShop();
+  document.getElementById("scoreText")
+    .textContent=score;
 
-  shopScreen.classList.remove("hidden");
+  document.getElementById("coinsText")
+    .textContent=coins;
+
+  document.getElementById("killsText")
+    .textContent=totalKills;
+
+  document.getElementById("healthFill")
+    .style.width=
+    Math.max(
+      0,
+      Math.min(
+        100,
+        health/maxHealth*100
+      )
+    )+"%";
+
+  document.getElementById("xpFill")
+    .style.width=
+    Math.min(
+      100,
+      xp/xpNeeded*100
+    )+"%";
+
+  document.getElementById("shopCoins")
+    .textContent=coins;
 
 }
-
-
-function closeShop(){
-
-  shopScreen.classList.add("hidden");
-
-  if(
-    pauseScreen.classList.contains("hidden") &&
-    settingsScreen.classList.contains("hidden") &&
-    achievementScreen.classList.contains("hidden") &&
-    levelUpScreen.classList.contains("hidden")
-  ){
-
-    gamePaused=false;
-
-  }
-
-}
-
-
-document
-.getElementById("shopButton")
-.addEventListener("click",openShop);
-
-
-document
-.getElementById("closeShop")
-.addEventListener("click",closeShop);
-
-
-document
-.getElementById("pauseShopButton")
-.addEventListener("click",()=>{
-
-  pauseScreen.classList.add("hidden");
-
-  openShop();
-
-});
 
 
 /* ==========================================================
-   RENDER SHOP
+   WEAPON DAMAGE
 ========================================================== */
 
-function renderShop(){
+function getWeaponDamage(){
 
-  shopGrid.innerHTML="";
+  const weapon=weapons[equippedWeapon];
 
-  Object.keys(weapons).forEach(id=>{
+  const weaponLevel=
+    weaponLevels[equippedWeapon];
 
-    const weapon=weapons[id];
+  return weapon.baseDamage+
+    ((weaponLevel-1)*15)+
+    (level-1)*3;
 
-    const owned=weaponOwned[id];
+}
 
-    const currentLevel=
-    weaponLevels[id];
 
-    const damage=
-    weapon.baseDamage+
-    ((currentLevel-1)*15);
+/* ==========================================================
+   CREATE EFFECT
+========================================================== */
 
-    const nextDamage=
-    damage+15;
+function createEffect(
+  x,
+  y,
+  text,
+  className
+){
 
-    const card=
+  const effect=
     document.createElement("div");
 
-    card.className="weapon-card";
+  effect.className=
+    "effect "+className;
 
-    if(equippedWeapon===id){
+  effect.textContent=text;
 
-      card.classList.add("equipped");
+  effect.style.left=x+"px";
+  effect.style.top=y+"px";
 
-    }
+  game.appendChild(effect);
 
-    let actionHTML="";
-
-
-    if(!owned){
-
-      const canBuy=
-      coins>=weapon.price &&
-      level>=weapon.levelReq;
-
-      actionHTML=`
-
-        <button
-          class="buy-button"
-          ${canBuy?"":"disabled"}
-          onclick="buyWeapon('${id}')"
-        >
-          🪙 ${weapon.price}
-        </button>
-
-      `;
-
-    }else{
-
-      const upgradeCost=
-      weapon.upgradeCost*
-      currentLevel;
-
-      const canUpgrade=
-      coins>=upgradeCost;
-
-      actionHTML=`
-
-        <button
-          class="equip-button"
-          onclick="equipWeapon('${id}')"
-        >
-          ${
-            equippedWeapon===id
-            ? "✓ EQUIPPED"
-            : "EQUIP"
-          }
-        </button>
-
-        <button
-          class="upgrade-button"
-          ${canUpgrade?"":"disabled"}
-          onclick="upgradeWeapon('${id}')"
-        >
-          ⬆️ ${upgradeCost}
-        </button>
-
-      `;
-
-    }
-
-
-    card.innerHTML=`
-
-      <div class="weapon-icon">
-        ${weapon.icon}
-      </div>
-
-      <div class="weapon-name">
-        ${weapon.name}
-      </div>
-
-      <div class="weapon-info">
-
-        ⚔️ Damage:
-        <b>${damage}</b>
-        <br>
-
-        ⭐ Weapon Level:
-        <b>${currentLevel}</b>
-
-        ${
-          !owned
-          ? `
-            <br>
-            🔓 Required Level:
-            <b>${weapon.levelReq}</b>
-
-            <br>
-            🪙 Price:
-            <b>${weapon.price}</b>
-          `
-          : `
-            <br>
-            ⬆️ Next Damage:
-            <b>${nextDamage}</b>
-          `
-        }
-
-      </div>
-
-      <div class="weapon-actions">
-        ${actionHTML}
-      </div>
-
-    `;
-
-    shopGrid.appendChild(card);
-
-  });
+  setTimeout(()=>{
+    effect.remove();
+  },700);
 
 }
 
 
 /* ==========================================================
-   BUY WEAPON
+   DAMAGE TEXT
 ========================================================== */
 
-function buyWeapon(id){
-
-  const weapon=weapons[id];
-
-  if(weaponOwned[id])
-  return;
-
-  if(level<weapon.levelReq){
-
-    showNotification(
-      "🔒 Reach Level "+
-      weapon.levelReq+
-      " first!"
-    );
-
-    return;
-
-  }
-
-  if(coins<weapon.price){
-
-    showNotification(
-      "🪙 Not enough coins!"
-    );
-
-    return;
-
-  }
-
-  coins-=weapon.price;
-
-  weaponOwned[id]=true;
-
-  equippedWeapon=id;
-
-  updateHUD();
-
-  saveGame();
-
-  renderShop();
-
-  showNotification(
-    weapon.icon+
-    " "+weapon.name+
-    " unlocked!"
-  );
-
-}
-
-
-/* ==========================================================
-   EQUIP
-========================================================== */
-
-function equipWeapon(id){
-
-  if(!weaponOwned[id])
-  return;
-
-  equippedWeapon=id;
-
-  updateHUD();
-
-  saveGame();
-
-  renderShop();
-
-  showNotification(
-    weapons[id].icon+
-    " Equipped!"
-  );
-
-}
-
-
-/* ==========================================================
-   UPGRADE
-========================================================== */
-
-function upgradeWeapon(id){
-
-  if(!weaponOwned[id])
-  return;
-
-  const weapon=weapons[id];
-
-  const currentLevel=
-  weaponLevels[id];
-
-  const cost=
-  weapon.upgradeCost*
-  currentLevel;
-
-  if(coins<cost){
-
-    showNotification(
-      "🪙 Not enough coins!"
-    );
-
-    return;
-
-  }
-
-  coins-=cost;
-
-  weaponLevels[id]++;
-
-  updateHUD();
-
-  saveGame();
-
-  renderShop();
-
-  showNotification(
-    "⬆️ "+weapon.name+
-    " upgraded!"
-  );
-
-}
-
-
-/* ==========================================================
-   PAUSE
-========================================================== */
-
-document
-.getElementById("pauseButton")
-.addEventListener("click",()=>{
-
-  if(gameOverState)
-  return;
-
-  gamePaused=true;
-
-  pauseScreen.classList.remove("hidden");
-
-});
-
-
-document
-.getElementById("resumeButton")
-.addEventListener("click",()=>{
-
-  pauseScreen.classList.add("hidden");
-
-  gamePaused=false;
-
-});
-
-
-document
-.getElementById("pauseRestartButton")
-.addEventListener("click",()=>{
-
-  location.reload();
-
-});
-
-
-/* ==========================================================
-   SETTINGS
-========================================================== */
-
-function openSettings(){
-
-  gamePaused=true;
-
-  settingsScreen.classList.remove("hidden");
-
-}
-
-
-function closeSettings(){
-
-  settingsScreen.classList.add("hidden");
-
-  if(
-    pauseScreen.classList.contains("hidden") &&
-    shopScreen.classList.contains("hidden")
-  ){
-
-    gamePaused=false;
-
-  }
-
-}
-
-
-document
-.getElementById("pauseSettingsButton")
-.addEventListener(
-  "click",
-  ()=>{
-
-    pauseScreen.classList.add("hidden");
-
-    openSettings();
-
-  }
-);
-
-
-document
-.getElementById("closeSettings")
-.addEventListener(
-  "click",
-  closeSettings
-);
-
-
-/* ==========================================================
-   SOUND SETTING
-========================================================== */
-
-document
-.getElementById("soundButton")
-.addEventListener("click",()=>{
-
-  soundEnabled=!soundEnabled;
-
-  document
-  .getElementById("soundButton")
-  .textContent=
-  soundEnabled
-  ? "ON"
-  : "OFF";
-
-  saveGame();
-
-});
-
-
-/* ==========================================================
-   MOBILE SETTING
-========================================================== */
-
-document
-.getElementById("mobileButton")
-.addEventListener("click",()=>{
-
-  mobileEnabled=!mobileEnabled;
-
-  mobileControls.style.display=
-  mobileEnabled
-  ? "block"
-  : "none";
-
-  document
-  .getElementById("mobileButton")
-  .textContent=
-  mobileEnabled
-  ? "ON"
-  : "OFF";
-
-  saveGame();
-
-});
-
-
-/* ==========================================================
-   MANUAL SAVE
-========================================================== */
-
-document
-.getElementById("saveButton")
-.addEventListener("click",()=>{
-
-  saveGame();
-
-  showNotification(
-    "💾 Game Saved!"
-  );
-
-});
-
-
-/* ==========================================================
-   RESET SAVE
-========================================================== */
-
-document
-.getElementById("resetButton")
-.addEventListener("click",()=>{
-
-  const confirmed=
-  confirm(
-    "Reset all Shadow Rush progress?"
-  );
-
-  if(!confirmed)
-  return;
-
-  localStorage.removeItem(
-    "shadowRushSave"
-  );
-
-  location.reload();
-
-});
-
-
-/* ==========================================================
-   ACHIEVEMENTS
-========================================================== */
-
-function checkAchievements(){
-
-  if(totalKills>=1){
-
-    unlockAchievement(
-      "firstKill"
-    );
-
-  }
-
-  if(totalKills>=10){
-
-    unlockAchievement(
-      "hunter"
-    );
-
-  }
-
-  if(totalBossKills>=1){
-
-    unlockAchievement(
-      "bossSlayer"
-    );
-
-  }
-
-  if(level>=5){
-
-    unlockAchievement(
-      "levelFive"
-    );
-
-  }
-
-  if(coins>=100){
-
-    unlockAchievement(
-      "rich"
-    );
-
-  }
-
-}
-
-
-function unlockAchievement(id){
-
-  if(
-    !achievements[id] ||
-    achievements[id].unlocked
-  )
-  return;
-
-  achievements[id].unlocked=true;
-
-  showNotification(
-    "🏅 Achievement Unlocked!"
-  );
-
-  saveGame();
-
-}
-
-
-/* ==========================================================
-   ACHIEVEMENT SCREEN
-========================================================== */
-
-function renderAchievements(){
-
-  const list=
-  document.getElementById(
-    "achievementList"
-  );
-
-  list.innerHTML="";
-
-  Object.keys(achievements)
-  .forEach(id=>{
-
-    const achievement=
-    achievements[id];
-
-    const item=
+function damageText(
+  x,
+  y,
+  amount,
+  color=""
+){
+
+  const effect=
     document.createElement("div");
 
-    item.className=
-    "achievement "+
-    (
-      achievement.unlocked
-      ? "unlocked"
-      : ""
-    );
+  effect.className=
+    "effect damage-text";
 
-    item.innerHTML=`
+  effect.textContent=
+    "-"+amount;
 
-      <b>
-        ${
-          achievement.unlocked
-          ? "🏅"
-          : "🔒"
-        }
-        ${achievement.name}
-      </b>
+  if(color)
+    effect.style.color=color;
 
-      <br>
+  effect.style.left=x+"px";
+  effect.style.top=y+"px";
 
-      <small>
-        ${achievement.description}
-      </small>
+  game.appendChild(effect);
 
-    `;
-
-    list.appendChild(item);
-
-  });
-
-}
-
-
-function openAchievements(){
-
-  gamePaused=true;
-
-  renderAchievements();
-
-  achievementScreen
-  .classList
-  .remove("hidden");
-
-}
-
-
-document
-.getElementById("closeAchievements")
-.addEventListener(
-  "click",
-  ()=>{
-
-    achievementScreen
-    .classList
-    .add("hidden");
-
-    gamePaused=false;
-
-  }
-);
-
-
-/* ==========================================================
-   GAME OVER
-========================================================== */
-
-function gameOver(){
-
-  gameOverState=true;
-
-  gamePaused=true;
-
-  document
-  .getElementById("finalScore")
-  .textContent=score;
-
-  document
-  .getElementById("finalLevel")
-  .textContent=level;
-
-  document
-  .getElementById("finalCoins")
-  .textContent=coins;
-
-  gameOverScreen
-  .classList
-  .remove("hidden");
-
-  saveGame();
+  setTimeout(()=>{
+    effect.remove();
+  },700);
 
 }
 
 
 /* ==========================================================
-   RESTART
+   CREATE DEATH EFFECT
 ========================================================== */
 
-document
-.getElementById("restartButton")
-.addEventListener("click",()=>{
+function createDeathEffect(x,y){
 
-  location.reload();
-
-});
-
-
-/* ==========================================================
-   GAME LOOP
-========================================================== */
-
-function gameLoop(time){
-
-  if(!gameStarted)
-  return;
-
-  if(!lastTime)
-  lastTime=time;
-
-  if(
-    !gamePaused &&
-    !gameOverState
-  ){
-
-    updatePlayer();
-
-    moveEnemies();
-
-    moveBosses();
-
-
-    /* ENEMY SPAWN */
-
-    if(
-      time-lastEnemySpawn>1500 &&
-      enemies.length<8
-    ){
-
-      createEnemy();
-
-      lastEnemySpawn=time;
-
-    }
-
-
-    /* BOSS EVERY 3 LEVELS */
-
-    if(
-      level>=3 &&
-      level%3===0 &&
-      bosses.length===0
-    ){
-
-      createBoss();
-
-    }
-
-  }
-
-  lastTime=time;
-
-  requestAnimationFrame(
-    gameLoop
+  createEffect(
+    x,
+    y,
+    "💥",
+    "death"
   );
 
 }
 
 
 /* ==========================================================
-   RESIZE
+   RANDOM SPAWN POSITION
 ========================================================== */
 
-window.addEventListener(
-  "resize",
-  ()=>{
+function randomSpawnPosition(){
 
-    playerX=
-    Math.min(
-      playerX,
-      window.innerWidth-55
-    );
+  const side=
+    Math.floor(Math.random()*4);
 
-    playerY=
-    Math.min(
-      playerY,
-      window.innerHeight-55
-    );
+  let x;
+  let y;
 
-  }
-);
-
-
-/* ==========================================================
-   AUTO SAVE
-========================================================== */
-
-setInterval(()=>{
-
-  if(gameStarted){
-
-    saveGame();
-
+  if(side===0){
+    x=-50;
+    y=Math.random()*window.innerHeight;
   }
 
-},5000);
+  if(side===1){
+    x=window.innerWidth+50;
+    y=Math.random()*window.innerHeight;
+  }
+
+  if(side===2){
+    x=Math.random()*window.innerWidth;
+    y=-50;
+  }
+
+  if(side===3){
+    x=Math.random()*window.innerWidth;
+    y=window.innerHeight+50;
+  }
+
+  return {x,y};
+
+}
 
 
 /* ==========================================================
-   BEFORE CLOSE
+   CREATE ENEMY
 ========================================================== */
 
-window.addEventListener(
-  "beforeunload",
-  saveGame
-);
+function createEnemy(){
 
+  if(enemies.length>=10)
+    return;
 
-/* ==========================================================
-   INITIALIZE
-========================================================== */
+  const types=[
+    "normal",
+    "normal",
+    "fast",
+    "tank"
+  ];
 
-loadGame();
+  const type=
+    types[
+      Math.floor(
+        Math.random()*types.length
+      )
+    ];
 
-updateHUD();
+  const position=
+    randomSpawnPosition();
 
-document
-.getElementById("soundButton")
-.textContent=
-soundEnabled
-? "ON"
-: "OFF";
+  const enemy=
+    document.createElement("div");
 
-document
-.getElementById("mobileButton")
-.textContent=
-mobileEnabled
-? "ON"
-: "OFF";
+  enemy.className=
+    "enemy "+type;
 
-mobileControls.style.display=
-mobileEnabled
-? "block"
-: "none";
+  let emoji="👾";
+  let hp=45+(level*8);
+  let speed=1.15+(level*.07);
+  let damage=7;
+  let reward=1;
+  let xpReward=25;
 
-</script>
+  if(type==="fast"){
 
-</body>
-</html>
+    emoji="👿";
+    hp=30+(level*5);
+    speed=1.9+(level*.09);
+    damage=5;
+    reward=2;
+    xpReward=30;
+
+  }
+
+  if(type==="tank"){
+
+    emoji="👹";
+    hp=100+(level*15);
+    speed=.65+(level*.03);
+    damage=12;
+    reward=3;
+    xpReward=45;
+
+  }
+
+  enemy.innerHTML=`
+
+    <div class="enemy-health">
+      <div class="enemy-health-fill"></div>
+    </div>
+
+    <span>${emoji}</span>
+
+  `;
+
+  const enemyObject={
+
+    element:enemy,
+
+    type,
+
+    x:position.x,
+    y:position.y,
+
+    hp,
+    maxHp:hp,
+
+    speed,
+    damage,
+
+    reward,
+    xpReward
+
+  };
+
+  enemies.push(enemyObject
